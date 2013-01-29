@@ -54,6 +54,8 @@ int contain_element_of_string(const char *src, const char *dest)
 	char *dest_ptr = NULL;
 	char *src_ptr_p = NULL;
 	char *dest_ptr_p = NULL;
+	int len_src = 0;
+	int len_dest = 0;
 	src_ptr = calloc(strlen(src) + 1, sizeof(char));
 
 	if(NULL == src_ptr) {
@@ -65,7 +67,9 @@ int contain_element_of_string(const char *src, const char *dest)
 	if(NULL == dest_ptr) {
 		return -1;
 	}
-
+	
+	len_src = strlen(src);
+	len_dest = strlen(dest);
 	strcpy(src_ptr, src);
 	strcpy(dest_ptr, dest);
 
@@ -74,13 +78,21 @@ int contain_element_of_string(const char *src, const char *dest)
 	
 	src_ptr_p = src_ptr;
 	dest_ptr_p = dest_ptr;
-	while(*src_ptr_p != '\0' && *dest_ptr_p != '\0' ) {
 
+	while(*src_ptr_p != '\0') {
+		while(*dest_ptr_p != '\0') {
+			if(strcmp(*src_ptr_p, *dest_ptr_p) != 0) {
+				break;
+			}
+			*dest_ptr_p++;
+		}
+		if(src_ptr_p - src_ptr < len_dest ){
+			return -1;
+		}
+		*src_ptr_p++;
 	}
 	
-	
-
-
+	return 0;
 	free(src_ptr);
 	free(dest_ptr);
 
