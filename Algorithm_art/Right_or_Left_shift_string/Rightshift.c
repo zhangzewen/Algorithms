@@ -50,8 +50,47 @@ void RightShift_3(int *arr, int N, int K)
 	Reverse(arr, 0, N - 1);
 }
 //-----------------------------------------------------------
+void swap(char *a, char *b)
+{
+	char temp = *a;
+	*a = *b;
+	*b = temp;
+}
+void Reverse(char *start, char *end)
+{
+	if (*start != '\0' && *end != '\0')
+	{
+		while (start < end)
+		{
+			swap(start, end);
+			start++;
+			end--;
+		}
+	}
+}
+char *LeftRotateString(char *src, unsigned int n)
+{
+	if (src != NULL)
+	{
+		int len = strlen(src);
+		if ( n < len && n >0)
+		{
+			char *pFirstStart = src;
+			char *pFirstEnd = src + n - 1;
+			char *pSecondStart = src + n;
+			char *pSecondEnd = src + len - 1; 
+			Reverse(pFirstStart, pFirstEnd);
+			Reverse(pSecondStart, pSecondEnd);
+			Reverse(pFirstStart, pSecondEnd);
+		}
+	}
 
-
+	return src;
+}
+//-----------------------------------------------------------
+//-----------------------------------------------------------
+//-----------------------------------------------------------
+//-----------------------------------------------------------
 int main (int argc, char *argv[])
 {
 	int a[] = {1,2,3,4,5,6,7,8,9,10};
