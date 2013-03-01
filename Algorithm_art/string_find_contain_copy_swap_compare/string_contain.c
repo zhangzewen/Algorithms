@@ -97,3 +97,101 @@ int contain_element_of_string(const char *src, const char *dest)
 	free(dest_ptr);
 
 }
+
+//-----------------------------------------------------------
+
+int CompareString(char *LongString, char *ShortString)
+{
+	int i = 0;
+	int j	= 0;
+	int ls_len = strlen(LongString);
+	int ss_len = strlen(ShortString);
+	for (i = 0; i < ls_len; i++)
+	{
+		for(j = 0; j < ss_len; j++)
+		{
+			if (LongString[i] == ShortString[j])
+			{
+				break;
+			}
+		}
+		if (j == ls_len)
+		{
+			printf("false\n");
+			break;
+		}
+	}
+	printf("true\n");
+	return 1;
+}
+
+
+//------------------------
+第二种方法是使用快排，把两个字符串排出有序串 
+然后再用类似于第一种的方法查找
+O(m log m) + O(n log n) + O(m + n) 
+
+//--------------------------------------
+采用计数排序o(n + m)
+
+void CounterSort(char *str, char *help_str)
+{
+	int help[26] = {0};
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int len = strlen(str);
+	for (i = 0; i < len; i++)
+	{
+		int index = str[i] - 'A';
+		help[index]++;
+	}
+
+	for (j = 1; j < 26; j++)
+	{
+		help[j] += help[j - 1];
+	}
+	for (k = len - 1; k >= 0; k--)
+	{
+		int index = str[k] - 'A';
+		int pos = help[index] - 1;
+		help_str[pos] = str[k];
+		help[index]--;
+	}
+}
+
+void Compare(char *long_str, char *short_str)
+{
+	int pos_long = 0;
+	int pos_short = 0;
+	int len_long = strlen(long_str);
+	int len_short = strlen(short_str);
+	while(pos_short < len_short && pos_long < len_long)
+	{
+		while(long_str[pos_long] < short_str[pos_short] && pos_long < len_long -1)
+			pos_leng++;
+		while(short_str[len_short] == short_str[pos_short + 1])
+				pos_short++;
+		if (long_str[pos_long] != short_str[pos_short])
+				break;
+		pos_long++;
+		pos_short++;
+	}
+	if (pos_short == len_short)
+		printf("true\n");
+	else
+		printf("false\n");
+}
+int main()
+{
+	char strOne[] = "ABCDAK";
+	char strTwo[] = "A";
+	char *ptr_one = strOne;
+	char *ptr_two = strtwo
+	
+	CounterSort(strOne, ptr_one);
+	CounterSort(strTwo, ptr_two);
+	Compare(ptr_one, ptr_two);
+	return 0;
+}
+
