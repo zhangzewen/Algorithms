@@ -194,4 +194,58 @@ int main()
 	Compare(ptr_one, ptr_two);
 	return 0;
 }
+/*第三种方法是O（n+m）的hashtable
+ *hash[26]，先全部清零，然后扫描短的字符串，若有相应的置1
+ *计算hash[26]中1的个数，然后计为m
+ *扫描长字符串的每一个字符a，若原来hash[a] == 1，则修改hash[a] = 0,并将m减1，若hash[a] == 0，则不做处理
+ *若m == 0 或者扫描结束，推出循环
+ */
+ 
 
+int contain_string(const char *dest, const char *src )
+{
+	int hash[26] = {0};
+	char *p_dest = NULL;
+	char *p_src = NULL;
+	char sum = 0;
+	if (NULL == dest || NULL == src)
+	{
+		return -1;
+	}
+
+	p_dest = dest;
+	p_src = src;
+
+	while(*p_src != '\0') 
+	{
+		int index = *p_src - 'A';
+
+		if (hash[index] == 0)
+		{
+			hash[index] = 1;
+			sum++;
+		}
+		p_src++;
+	}
+
+
+	while(*p_src != '\0')
+	{
+		int index = *p_src - 'A';
+
+		if(hash[index] == 1)
+		{
+			hash[index] = 0;
+
+			num--;
+			if (num == 0)
+				break;
+		}
+	}
+
+	if(num == 0)
+		return 0;
+	else
+		return -1;
+	return 0;
+}
