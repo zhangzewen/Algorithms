@@ -120,59 +120,13 @@ void InOrderTraveerse(BiTree T)
 //
 void PostOrderTravaerse(BiTree T)
 {
-/*
-	SqStack S=NULL;
-	S=InitStack(S);
-	BiTree p=NULL;
-	char flag;
-	BiTree q = NULL;
-	p = T;
-	while(p || !StackEmpty(S))
-	{
-		if(p != q)
-		{
-				while(p)
-				{
-					Push(S,p);
-					if(p->lchild)
-						p = p->lchild;
-					else
-						p = p->rchild;
-				}
-		}
-		if(!StackEmpty(S)) break;
-		q=GetTop(S);
-		if(q->rchild == p)
-		{
-			p = Pop(S);
-			printf("%4c",p->data);
-			p = q;
-			flag = p->data;
-		}
-		else
-		{
-			p = q->rchild;
-			if(flag == p->data)
-			{
-				p = Pop(S);
-				printf("%4c",p->data);
-				p = q;
-				flag = p->data;
-			}
-		}
-	}
-*/
-
-
-
 	SqStack S=NULL;
 	S=InitStack(S);
 	BiTree p=NULL;
 	p = T;
 	while(p||!StackEmpty(S))
 	{
-		while(p &&(p->lflag != 1 || p->rflag != 1))
-		{
+		while(p || (p->rflag == 1 && p->lflag == 1)) {
 			if(p->lchild && p->lflag != 1)
 			{
 				p->lflag = 1;
@@ -185,15 +139,10 @@ void PostOrderTravaerse(BiTree T)
 				Push(S,p);
 				p = p->rchild;
 			}
-			else
-			{
-				/*Do Nothing*/
-			}
 		}
-		p = Pop(S);		
-		printf("%4c",p->data);
-		p = GetTop(S);
-
+			p = Pop(S);		
+			printf("%4c",p->data);
+			p = GetTop(S);
 	}
 }
 

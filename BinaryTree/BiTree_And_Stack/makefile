@@ -1,5 +1,5 @@
 main: main.o BiTree.o
-	gcc main.o BiTree.o -o main
+	gcc -g main.o BiTree.o -o main
 main.o: main.c BiTree.h
 	gcc -g -Wall -c main.c -o main.o
 BiTree.o: BiTree.h BiTree.c
