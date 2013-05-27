@@ -18,9 +18,9 @@ int main()
  	InOrderTraveerse(root);
 	printf("\nDone!!!!\n");
 
-	printf("后序遍历.....\n");
+	printf("PostOrderTravaerse..\n");
   PostOrderTravaerse(root);
-	printf("\n遍历完成\n");
+	printf("\nDone\n");
 
 	return 0;	
 }

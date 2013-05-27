@@ -1,31 +1,5 @@
 #ifndef __HASHTABLE_H_INCLUDED
 #define __HASHTABLE_H_INCLUDED
-
-unsigned int master_key_maker(const char *value)
-{
-	char *pos	 = NULL;
-	unsigned int sum;
-	if (NULL == value) {
-		return (unsigned int )0;
-	}
-	pos = value;
-	while(pos != '\0') {
-		sum += pos; 
-	}
-
-	return 0;
-}
-
-
-unsigned int second_key_maker(unsigned int value)
-{
-	unsigned int key;
-	key = value % 26;
-	return key;
-}
-
-
-
 struct HashTable{
 	struct list_head table_head;
 	unsigned int master_key_maker(const char *value);
