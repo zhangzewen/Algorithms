@@ -1,70 +1,30 @@
 #ifndef __HASHTABLE_H_INCLUDED
 #define __HASHTABLE_H_INCLUDED
+
 struct HashTable{
 	struct list_head table_head;
-	unsigned int master_key_maker(const char *value);
-	unsigned int second_key_maker(unsigned int value);
-}
-
-struct Node{
-	struct list_head list;
-	unsigned long int key;
-	char value[64]; 
-	struct list_head child;
-		
+	void *first_hash(void *hash);
+	void *second_hash(void *hash);
+	void *value_compare(void *value);
 };
 
-struct HashTable *create_hashtable(unsigned int (*master_key_maker)(const char *value), unsigned int (*second_key_maker)(unsigned int value))
-{
-	struct HashTable *hash;
-	
-	hash = (struct HashTable *)malloc(sizeof (struct HashTable));
-	
-	if (NULL == hash) {
-		perror("malloc error!\n");
-		return (struct HashTable *) -1;
-	}
-
-	INIT_LIST_HEAD(&hash->list);
-	
-	hash->master_key_maker = master_key_maker;
-	hash->second_key_maker = second_key_maker;
-
-	return hash;
-}
+struct Node{
+	struct list_head node;
+	struct list_head child;
+	void *data;
+	void *key;
+	int hit;
+};
 
 
+struct HashTable *hash_table_malloc(void *(*first_hash)(void *value),
+																	void *(*second_hash)(void *value),
+																	int (*value_compare)(void *key));
 
-struct Node *create_node( void )
-{
-	struct Node *node;
-	
-	node = (struct Node *)malloc(sizeof(struct Node));
-	
-	if (NULL == node) {
-		perror("malloc error!\n");
-		return (struct Node *) -1;
-	}
+struct Node *node_malloc();
 
-	node->key = 0;
-	node->value[0] = 0;
-	INIT_LIST_HEAD(&node->list);
-	INIT_LIST_HEAD(&node->child);
-	return node;
-	
-}
+void hash_table_free(struct HashTable *hash_table);
 
-void add_value_to_table(struct HashTable *hash, const char *value)
-{
-		
-}
-
-
-
-
-
-
-
-
+void node_free(struct Node *node);
 
 #endif
