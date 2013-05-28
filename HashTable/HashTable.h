@@ -1,12 +1,14 @@
 #ifndef __HASHTABLE_H_INCLUDED
 #define __HASHTABLE_H_INCLUDED
 
+#include "list.h"
+
 struct HashTable{
 	struct list_head table_head;
-	void *first_hash(void *hash);
-	void *second_hash(void *hash);
-	int value_compare(void *dest_data, void *src_data);
-	int key_compare(void *dest_key, void *src_data);
+	void *(*first_hash)(void *data);
+	void *(*second_hash)(void *data);
+	int (*value_compare)(void *dest_data, void *src_data);
+	int (*key_compare)(void *dest_key, void *src_data);
 };
 
 struct Node{
