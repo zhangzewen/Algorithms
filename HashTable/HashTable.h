@@ -22,7 +22,8 @@ struct Node{
 
 struct HashTable *hash_table_malloc(void *(*first_hash)(void *value),
 																	void *(*second_hash)(void *value),
-																	int (*value_compare)(void *key));
+																	int (*data_compare)(void *dest_data, void *src_data),
+																	int (*key_compare)(void *dest_key, void *src_key));
 
 struct Node *node_malloc();
 
