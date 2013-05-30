@@ -31,7 +31,7 @@ struct Node *node_malloc()
 	node = (struct Node *)malloc(sizeof(struct Node));
 	
 	if(NULL == node) {
-		exit(-1);
+		return NULL;
 	}
 
 	INIT_LIST_HEAD(&node->node);
@@ -167,7 +167,7 @@ int add_record_to_hash_table(struct HashTable *table_head, void *data)
 	node = find_data_from_hash_table(table_head, data);
 
 	if(NULL == node) {
-		node = (struct Node *)malloc(sizeof(struct Node));
+		node = node_malloc(); 
 		if(NULL == node){
 			return -1;
 		}		
