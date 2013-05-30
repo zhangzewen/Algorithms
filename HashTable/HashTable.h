@@ -30,6 +30,7 @@ struct Node *node_malloc();
 void hash_table_free(struct HashTable *hash_table);
 
 void node_free(struct Node *node);
-int add_data_to_hash_table(struct HashTable *table_head, void *data);
-
+struct Node *find_data_from_hash_table(struct HashTable *table, void *data);
+int add_record_to_hash_table(struct HashTable *table_head, void *data);
+int del_record_to_hash_table(struct HashTable *table, void *data);
 #endif

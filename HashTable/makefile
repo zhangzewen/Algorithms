@@ -1,10 +1,9 @@
-CFLAGS+=-g
 test: test.o HashTable.o
-	gcc test.o HashTable.o -o test
+	gcc -g test.o HashTable.o -o test
 HashTable.o: HashTable.c HashTable.h list.h
-	gcc -c HashTable.c -o HashTable.o
+	gcc -g -c HashTable.c -g -o HashTable.o
 test.o: test.c HashTable.h list.h
-	gcc -c test.c -o test.o
+	gcc -g -c test.c -g -o test.o
 clean:
 	rm -fr *.o
 	rm -fr test

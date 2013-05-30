@@ -15,7 +15,7 @@ struct HashTable *hash_table_malloc(void *(*first_hash)(void *value),
 		exit(-1);
 	}
 
-	LIST_INIT(&head->table_head);
+	INIT_LIST_HEAD(&head->table_head);
 	head->first_hash = first_hash;
 	head->second_hash = second_hash;
 	head->value_compare = data_compare;
@@ -34,8 +34,8 @@ struct Node *node_malloc()
 		exit(-1);
 	}
 
-	LIST_INIT(&node->node);
-	LIST_INIT(&node->child);
+	INIT_LIST_HEAD(&node->node);
+	INIT_LIST_HEAD(&node->child);
 	node->data = NULL;
 	node->key = NULL;
 	
@@ -134,7 +134,7 @@ struct Node *find_data_from_hash_table(struct HashTable *table, void *data)
 	list_for_each_entry_safe(outter, tmp, &table->table_head, node){
 		if(table->key_compare(table->first_hash(data), outter->key) == 0)	 {
 			
-			if(!list_emptry(&outter->child)) {
+			if(!list_empty(&outter->child)) {
 					struct Node *tmp = NULL;
 					list_for_each_entry_safe(inner, tmp, &outter->child, node)	{
 						if(table->value_compare(inner->data, data) == 0) {
