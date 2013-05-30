@@ -138,13 +138,24 @@ void PostOrderTravaerse(BiTree T)
 				p->rflag = 1;
 				Push(S,p);
 				p = p->rchild;
-			}else {
+			} else{
 				break;
 			}
+#if 0
+			}else if(p && (p->rflag == 1 && p->lflag == 1)){
+				break;
+			}
+#endif
 		}
-				p = GetTop(S);
-				printf("%4c",p->data);
-				p = Pop(S);		
+		if(p->lchild == NULL && p->rchild == NULL) {
+			printf("%4c",p->data);
+			p = GetTop(S);
+		}
+		if( (p &&(p->lchild == NULL || p->rchild == NULL))&&( p->lchild == 1 || p->rchild == 1)) {
+			p = Pop(S);		
+			printf("%4c",p->data);
+			p = GetTop(S);
+		}
 	}
 }
 
