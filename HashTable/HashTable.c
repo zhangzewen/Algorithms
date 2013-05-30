@@ -110,6 +110,24 @@ void node_free(struct Node *node)
 
 
 
+struct Node *find_key_from_hash_table(struct HashTable *table, void *data)
+{
+	struct Node *tmp = NULL;
+	struct Node *outer = NULL;
+	
+	if (NULL == table) {
+		return NULL;
+	}
+
+	list_for_each_entry_safe(outer, tmp, &table->table_head, node) {
+		if(table->key_compare(table->first_hash(data), outer->key) == 0)	{
+			return outer;
+		}
+	}
+
+	return NULL;
+}
+
 /*
  *struct Node *find_data_from_hash_table(struct HashTable *table, void *data)
  *@table, the Hash Table where zhe @data will be found from
@@ -119,36 +137,33 @@ void node_free(struct Node *node)
 
 struct Node *find_data_from_hash_table(struct HashTable *table, void *data)
 {
-	struct Node *inner = NULL;
-	struct Node *outter = NULL;
-	if (NULL ==  table) {
-		return NULL;
-	}	
-
-	if(list_empty(&table->table_head)) {
-		return NULL;
+	struct Node *node;
+	if(NULL == table){
+		return -1;
 	}
 	
-	struct Node *tmp = NULL;
-
-	list_for_each_entry_safe(outter, tmp, &table->table_head, node){
-		if(table->key_compare(table->first_hash(data), outter->key) == 0)	 {
-			
-			if(!list_empty(&outter->child)) {
-					struct Node *tmp = NULL;
-					list_for_each_entry_safe(inner, tmp, &outter->child, node)	{
-						if(table->value_compare(inner->data, data) == 0) {
-								return inner;
-						}
-					}
+	node = find_key_from_hash_table(table, data);
+	
+	if(NULL == node) {
+		return NULL;	
+	}
+	
+	if(NULL != node) {
+		
+		if(list_empty(&node->child)){
+			return node;
+		}else{
+			struct Node *inner, *tmp;
+			list_for_each_entry_safe(inner, tmp, &node->child, node) {
+				if(table->value_compare(inner->data, data) == 0) {
+					return inner;
+				}
 			}
-			return outter;
-		}		
+		}
 	}
 	
 	return NULL;
 }
-
 /*
  *int add_data_to_hash_table(struct HashTable *table_head, void *data)
  *@table_head , the Hash Table
@@ -157,37 +172,70 @@ struct Node *find_data_from_hash_table(struct HashTable *table, void *data)
  */
 
 
+
 int add_record_to_hash_table(struct HashTable *table_head, void *data)
 {
 	struct Node *node;
-	if(NULL == table_head){
+	if(NULL == table_head)	{
 		return -1;
-	}
+	}	
 	
-	node = find_data_from_hash_table(table_head, data);
+	node = find_key_from_hash_table(table_head, void *data);
 
-	if(NULL == node) {
-		node = node_malloc(); 
-		if(NULL == node){
-			return -1;
-		}		
+	if( NULL == node)	{
+		node = node_malloc();
 		
-		node->key = table_head->first_hash(data);
+		if(NULL == node)	{
+			return -1;
+		}
 
-		node->data = data;
-		node->hit = 0;
+		node->key = table_head->first_hash(data);
 	
+		node->data = data;
+		
+		node->hit = 0;
+
 		list_add(&node->node, &table_head->table_head);
+	
 		return 0;
 	}
-	if(NULL != node) {
-		node->hit++;
-		return 1; 
+
+	if(NULL != node){
+
+		if(list_empty(&node->child))	{
+			struct Node *tmp;
+			tmp = node_malloc();
+			if(NULL == tmp)	{
+				return -1;
+			}
+
+			tmp->key = node->key;
+			tmp->data = node->data; 
+			tmp->hit = node->hit;
+			list_add(&tmp->node, &node->child);
+
+			node->data = NULL;
+			node->hit = 0;
+		}
+	
+	
+		struct Node *tmp;
+		tmp = node_malloc();
+
+		if(NULL == tmp)	{
+			return -1;
+		}
+
+		tmp->key = node->key;
+		tmp->data = data;
+		tmp->hit = 0;
+
+		list_add(&tmp->node, &node->child);
+	
+		return 0;
+
 	}
-
-	return -1;
 }
-
 
 
 /*
@@ -204,14 +252,15 @@ int del_record_to_hash_table(struct HashTable *table, void *data)
 	if(NULL == table){
 		return -1;
 	}
-	
+
 	node = find_data_from_hash_table(table, data);
-	
+
 	if(NULL == node) {
 		return -1;	
 	}
-	
+
 	if(NULL != node) {
+
 		list_del(&node->node);
 		node_free(node);
 		return 0;
