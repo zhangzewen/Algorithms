@@ -139,7 +139,7 @@ struct Node *find_data_from_hash_table(struct HashTable *table, void *data)
 {
 	struct Node *node;
 	if(NULL == table){
-		return -1;
+		return NULL;
 	}
 	
 	node = find_key_from_hash_table(table, data);
@@ -180,7 +180,7 @@ int add_record_to_hash_table(struct HashTable *table_head, void *data)
 		return -1;
 	}	
 	
-	node = find_key_from_hash_table(table_head, void *data);
+	node = find_key_from_hash_table(table_head, data);
 
 	if( NULL == node)	{
 		node = node_malloc();
