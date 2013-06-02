@@ -179,30 +179,30 @@ int add_record_to_hash_table(struct HashTable *table_head, void *data)
 	if(NULL == table_head)	{
 		return -1;
 	}	
-	
+
 	node = find_key_from_hash_table(table_head, data);
 
 	if( NULL == node)	{
 		node = node_malloc();
-		
+
 		if(NULL == node)	{
 			return -1;
 		}
 
 		node->key = table_head->first_hash(data);
-	
+
 		node->data = data;
-		
+
 		node->hit = 0;
 
 		list_add(&node->node, &table_head->table_head);
-	
+
 		return 0;
 	}
 
 	if(NULL != node){
 
-		if(list_empty(&node->child))	{
+		if(list_empty(&node->child)&& table_head->value_compare(node->data, data) != 0)	{
 			struct Node *tmp;
 			tmp = node_malloc();
 			if(NULL == tmp)	{
@@ -216,22 +216,46 @@ int add_record_to_hash_table(struct HashTable *table_head, void *data)
 
 			node->data = NULL;
 			node->hit = 0;
+
+			tmp = NULL;
+			tmp = node_malloc();
+
+			if(NULL == tmp)	{
+				return -1;
+			}
+
+			tmp->key = node->key;
+			tmp->data = data;
+			tmp->hit = 0;
+
+			list_add(&tmp->node, &node->child);
+		
+		}else if(list_empty(&node->child)&& table_head->value_compare(node->data, data) == 0) {
+			node->hit++;
+		}	
+
+		if(!list_empty(&node->child)) {
+			struct Node *tmp, *ptr;
+			list_for_each_entry_safe(ptr, tmp, &node->child, node)	{
+				if(table_head->value_compare(ptr->data, data) == 0) {
+					ptr->hit++;
+					return 0;
+				}
+			}
+
+			tmp = NULL;
+			tmp = node_malloc();
+
+			if(NULL == tmp)	{
+				return -1;
+			}
+
+			tmp->key = node->key;
+			tmp->data = data;
+			tmp->hit = 0;
+
+			list_add(&tmp->node, &node->child);
 		}
-	
-	
-		struct Node *tmp;
-		tmp = node_malloc();
-
-		if(NULL == tmp)	{
-			return -1;
-		}
-
-		tmp->key = node->key;
-		tmp->data = data;
-		tmp->hit = 0;
-
-		list_add(&tmp->node, &node->child);
-	
 		return 0;
 
 	}
