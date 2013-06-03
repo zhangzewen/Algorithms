@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
 	struct data child_4;
 	struct data child_5;
 	struct data child_6;
+	struct data child_7;
 	void *token;
 /***********child*****************/
 	strcpy(child.name, "zhangjie");
@@ -119,9 +120,9 @@ int main(int argc, char *argv[])
 	child_6.age = 15;
 	strcpy(child_6.address, "changjiang rode 1");	
 /***********child_4*****************/
-	strcpy(child_4.name, "lihua");
+	strcpy(child_7.name, "lihua");
 	child_4.age = 13;
-	strcpy(child_4.address, "changjiang rode 15");	
+	strcpy(child_7.address, "changjiang rode 15");	
 #if 0
 	token = first_hash((void *)&child_1);
 	printf("the key is %d\n", *((int *)token));
@@ -137,6 +138,7 @@ int main(int argc, char *argv[])
 	add_record_to_hash_table(table, (void *)(&child_4));
 	add_record_to_hash_table(table, (void *)(&child_5));
 	add_record_to_hash_table(table, (void *)(&child_6));
+	add_record_to_hash_table(table, (void *)(&child_7));
 	print(table);	
 	return 0;
 }
