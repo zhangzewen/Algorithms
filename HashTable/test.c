@@ -118,6 +118,10 @@ int main(int argc, char *argv[])
 	strcpy(child_6.name, "zhanhua");
 	child_6.age = 15;
 	strcpy(child_6.address, "changjiang rode 1");	
+/***********child_4*****************/
+	strcpy(child_4.name, "lihua");
+	child_4.age = 13;
+	strcpy(child_4.address, "changjiang rode 15");	
 #if 0
 	token = first_hash((void *)&child_1);
 	printf("the key is %d\n", *((int *)token));
