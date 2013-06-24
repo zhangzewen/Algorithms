@@ -9,10 +9,14 @@ public:
 		stacksize = size;
 		step = step;
 	}
-	Stack& GetTop(Stack& S){return *this;}
+	int GetTop(Stack& S)const;
 	Stack& Pop(Stack& S){return *this;}
 	Stack& Push(Stack& S){return *this;}
 	~Stack(){
+		for(;base != top; base++){
+			free(base);
+		}
+		free(top);
 		base = NULL;
 		top = NULL;
 		stacksize = 0;
