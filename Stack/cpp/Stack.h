@@ -1,6 +1,5 @@
 #ifndef __CPP_STACK_H_
 #define __CPP_STACK_H_
-
 class Stack{
 public:
 	Stack(int size, int step):base(NULL), top(NULL), stacksize(0), step(0){
@@ -9,14 +8,12 @@ public:
 		stacksize = size;
 		step = step;
 	}
-	int GetTop(Stack& S)const;
-	Stack& Pop(Stack& S){return *this;}
-	Stack& Push(Stack& S){return *this;}
+	int GetTop()const;
+	Stack& Pop(int *val);
+	Stack& Push(int val);
+	void Print()const;
 	~Stack(){
-		for(;base != top; base++){
-			free(base);
-		}
-		free(top);
+		delete [] base;
 		base = NULL;
 		top = NULL;
 		stacksize = 0;

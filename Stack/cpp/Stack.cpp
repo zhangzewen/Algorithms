@@ -1,12 +1,14 @@
 #include <iostream>
 #include "Stack.h"
 
+using namespace std;
+using std::cout;
+using std::cin;
 
-
-int Stack::GetTop(Stack& S)const
+int Stack::GetTop()const
 {
 	int *ptr;
-	ptr = S.top;
+	ptr = top;
 	ptr--;
 	return *ptr;
 }
@@ -16,18 +18,50 @@ int Stack::GetTop(Stack& S)const
 
 
 
-Stack& Stack::Push(Stack& S)
+Stack& Stack::Push(int val)
 {
-	if(S.top - S.base >= 0){
-	
+	int *tmp = NULL;
+	int *ptr = NULL;
+	if(top - base >= stacksize){
+		stacksize =+ step;
+		tmp = new int[stacksize];
+		ptr = tmp;
+		while(base != top){
+			*ptr = *base;
+			base++;
+			ptr++;
+		}
+
+		base = tmp;
+		top = ptr;
 	}
-	
-	
+		
+	if(top == base)	{
+		*base = val;
+		top++;
+	}else{
+		*top = val;
+		top++;
+	}
+	return *this;
+}
+
+Stack& Stack::Pop(int *val)
+{
+	--top;
+	val = top;
 	
 	return *this;
 }
 
-Stack& Stack::Pop(Stack& S)
+void Stack::Print()const
 {
-	return *this;
+	int *ptr;
+
+	ptr = base;
+
+	while(ptr != top) {
+		cout << endl <<*ptr << endl;
+	}	
+
 }
