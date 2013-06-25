@@ -31,7 +31,7 @@ Stack& Stack::Push(int val)
 			base++;
 			ptr++;
 		}
-
+		delete [] base;
 		base = tmp;
 		top = ptr;
 	}
@@ -62,6 +62,7 @@ void Stack::Print()const
 
 	while(ptr != top) {
 		cout << endl <<*ptr << endl;
+		ptr++;
 	}	
 
 }
