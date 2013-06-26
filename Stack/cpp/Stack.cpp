@@ -23,7 +23,7 @@ Stack& Stack::Push(int val)
 	int *tmp = NULL;
 	int *ptr = NULL;
 	if(top - base >= stacksize){
-		stacksize =+ step;
+		stacksize += step;
 		tmp = new int[stacksize];
 		ptr = tmp;
 		while(base != top){

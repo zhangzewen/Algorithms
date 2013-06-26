@@ -2,11 +2,11 @@
 #define __CPP_STACK_H_
 class Stack{
 public:
-	Stack(int size, int step):base(NULL), top(NULL), stacksize(0), step(0){
+	Stack(int size, int step_val):base(NULL), top(NULL), stacksize(0), step(0){
 		base = new int[size];
 		top = base;
 		stacksize = size;
-		step = step;
+		step = step_val;
 	}
 	int GetTop()const;
 	Stack& Pop(int *val);
