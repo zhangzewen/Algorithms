@@ -22,13 +22,15 @@ Stack& Stack::Push(int val)
 {
 	int *tmp = NULL;
 	int *ptr = NULL;
+	int *base_ptr = NULL;
 	if(top - base >= stacksize){
 		stacksize += step;
 		tmp = new int[stacksize];
 		ptr = tmp;
-		while(base != top){
-			*ptr = *base;
-			base++;
+		base_ptr = base;
+		while(base_ptr != top){
+			*ptr = *base_ptr;
+			base_ptr++;
 			ptr++;
 		}
 		delete [] base;
@@ -46,10 +48,14 @@ Stack& Stack::Push(int val)
 	return *this;
 }
 
-Stack& Stack::Pop(int *val)
+Stack& Stack::Pop()
 {
+	if(top == base) {
+		cout << endl <<"no elements" << endl;
+		return *this;
+	}
 	--top;
-	val = top;
+	cout << endl << *top << endl;
 	
 	return *this;
 }

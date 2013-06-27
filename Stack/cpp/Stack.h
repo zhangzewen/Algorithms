@@ -9,7 +9,7 @@ public:
 		step = step_val;
 	}
 	int GetTop()const;
-	Stack& Pop(int *val);
+	Stack& Pop();
 	Stack& Push(int val);
 	void Print()const;
 	~Stack(){
