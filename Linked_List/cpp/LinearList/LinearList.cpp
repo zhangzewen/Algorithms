@@ -1,4 +1,5 @@
 #include <iostream>
+#include "LinearList.h"
 
 using namespace std;
 using std::cin;
@@ -72,7 +73,7 @@ void LinearList<T>::Output(ostream &out)const
 }
 
 template<class T>
-ostream& operator<<(ostream& out, const LinearList<T>& x)
+ostream& operator <<(ostream& out, const LinearList<T>& x)
 {
 	x.Output(out);
 	return out;
