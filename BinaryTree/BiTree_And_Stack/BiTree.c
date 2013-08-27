@@ -8,12 +8,12 @@ SqStack InitStack(SqStack S)
 	S->base =(struct BiTNode **)malloc(STACK_INIT_SIZE*sizeof(struct BiTNode**));
 	if(!S->base) exit(1);
 	S->top=S->base;
-	S->stacksize =STACK_INIT_SIZE;	
+	S->stacksize =STACK_INIT_SIZE;
 	return S;
 }
 
 BiTree GetTop(SqStack S)
-{	
+{
 	BiTree e;
 	BiTree *p;
 	p=S->top;
@@ -21,16 +21,16 @@ BiTree GetTop(SqStack S)
 	p=p-1;
 	e=*p;
 	return e;
-	
+
 }
 
 SqStack Push(SqStack S,BiTree e)
-{	
+{
 	if((S->top)-(S->base)>=(S->stacksize)){
 		S->base =(BiTree*)realloc(S->base,(S->stacksize + STACKINCREMENT)*sizeof(struct BiTNode**));
-		
+
 		S->top=S->base+S->stacksize;
-		S->stacksize+=STACKINCREMENT;	
+		S->stacksize+=STACKINCREMENT;
 	}
 	*(S->top)=e;
 	S->top++;
@@ -67,7 +67,7 @@ Status CreateBiTree(BiTree *T)
 
 	if(ch=='#') (*T)=NULL;
 	else
-	{ 
+	{
 		if(!((*T)=(BiTree)malloc(sizeof(struct BiTNode))))   exit(FALUSE);
 		(*T)->data=ch;
 		(*T)->lflag = 0;
@@ -76,7 +76,7 @@ Status CreateBiTree(BiTree *T)
 		CreateBiTree(&(*T)->rchild);
 
 	}
-	return OK;	
+	return OK;
 }
 
 void PreOrderTraverse(BiTree T)
@@ -123,38 +123,51 @@ void PostOrderTravaerse(BiTree T)
 	SqStack S=NULL;
 	S=InitStack(S);
 	BiTree p=NULL;
+	BiTree tmp = NULL;
 	p = T;
-	Push(S, p);
+    Push(S, p);
 	while(!StackEmpty(S))
 	{
+
 		while(p){
-			if(p->lchild && p->lflag != 1 )
+
+			if(p->lflag != 1 )
 			{
 				p->lflag = 1;
-				Push(S,p);
-				p = p->lchild;
-			}
-			if(p->rchild && p->rflag != 1 )
+				if(p->lchild){
+                    Push(S, p->lchild);
+                    p = p->lchild;
+				}
+			}else if(p->rflag != 1 )
 			{
 				p->rflag = 1;
-				Push(S,p);
-				p = p->rchild;
+                if(p->rchild){
+                    Push(S, p->rchild);
+                    p = p->rchild;
+                }
+
+			}
+
+			if(p->lflag == 1 && p->rchild == 1){
+                break;
 			}
 		}
-		if(NULL == p) {
-			p = GetTop(S);
-		}
-		p = GetTop(S);
+		p = Pop(S);
+		tmp = GetTop(S);
+		if()
+
+
 		if((p->lchild == NULL && p->rchild == NULL) ||(p->lflag == 1 && p->rflag == 1)) {
-			p = Pop(S);		
+			p = Pop(S);
 			printf("%4c",p->data);
 			p = GetTop(S);
 		}
 		if((p->lchild == NULL && p->rflag == 1) || ( p->lflag == 1 && p->rchild == NULL)) {
-			p = Pop(S);		
+			p = Pop(S);
 			printf("%4c",p->data);
 			p = GetTop(S);
 		}
+
 	}
 }
 
