@@ -128,19 +128,22 @@ void PostOrderTravaerse(BiTree T)
 	while(!StackEmpty(S))
 	{
 		while(p){
-		if(p->lchild && p->lflag != 1 )
-		{
-			p->lflag = 1;
-			Push(S,p);
-			p = p->lchild;
+			if(p->lchild && p->lflag != 1 )
+			{
+				p->lflag = 1;
+				Push(S,p);
+				p = p->lchild;
+			}
+			if(p->rchild && p->rflag != 1 )
+			{
+				p->rflag = 1;
+				Push(S,p);
+				p = p->rchild;
+			}
 		}
-		if(p->rchild && p->rflag != 1 )
-		{
-			p->rflag = 1;
-			Push(S,p);
-			p = p->rchild;
+		if(NULL == p) {
+			p = GetTop(S);
 		}
-		} 
 		p = GetTop(S);
 		if((p->lchild == NULL && p->rchild == NULL) ||(p->lflag == 1 && p->rflag == 1)) {
 			p = Pop(S);		
