@@ -5,5 +5,6 @@ main.o: main.c BiTree.h
 BiTree.o: BiTree.h BiTree.c
 	gcc -g -Wall -c BiTree.c -o BiTree.o
 clean:
-	@-rm -f *.o
-	@-rm -f main
+	rm -f *.o
+	rm -f main
+	rm -fr core.*

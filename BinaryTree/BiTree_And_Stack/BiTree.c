@@ -125,14 +125,16 @@ void PostOrderTravaerse(BiTree T)
 	BiTree p=NULL;
 	BiTree tmp = NULL;
 	p = T;
-    Push(S, p);
+  Push(S, p);
 	while(!StackEmpty(S))
 	{
 
 		while(p){
-
 			if(p->lflag != 1 )
 			{
+				if(GetTop(S) != p) {
+					Push(S, p);	
+				}
 				p->lflag = 1;
 				if(p->lchild){
                     Push(S, p->lchild);
@@ -140,6 +142,9 @@ void PostOrderTravaerse(BiTree T)
 				}
 			}else if(p->rflag != 1 )
 			{
+				if(GetTop(S) != p) {
+					Push(S, p);	
+				}
 				p->rflag = 1;
                 if(p->rchild){
                     Push(S, p->rchild);
@@ -147,38 +152,25 @@ void PostOrderTravaerse(BiTree T)
                 }
 
 			}
-
 			if(p->lflag == 1 && p->rflag == 1){
                 break;
 			}
 		}
 		p = Pop(S);
+		printf("%4c", p->data);
+		if(StackEmpty(S)) {
+			return;
+		}
 		tmp = GetTop(S);
 		if(tmp->lflag == 1 && tmp->rflag == 1) {
-			printf("%4c", p->data);
+			p = tmp;
 		}else if(tmp->lflag != 1){
 			tmp->lflag = 1;
-			Push(S, p);
 			p = tmp->lchild;
 		}else if(tmp->rflag != 1){
 			tmp->rflag = 1;
-			Push(S, p);
 			p = tmp->rchild;
 		}
-#if 0
-
-		if((p->lchild == NULL && p->rchild == NULL) ||(p->lflag == 1 && p->rflag == 1)) {
-			p = Pop(S);
-			printf("%4c",p->data);
-			p = GetTop(S);
-		}
-		if((p->lchild == NULL && p->rflag == 1) || ( p->lflag == 1 && p->rchild == NULL)) {
-			p = Pop(S);
-			printf("%4c",p->data);
-			p = GetTop(S);
-		}
-#endif
-
 	}
 }
 
