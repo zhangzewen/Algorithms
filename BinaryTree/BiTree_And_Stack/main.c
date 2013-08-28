@@ -19,7 +19,7 @@ int main()
 	printf("\nDone!!!!\n");
 
 	printf("PostOrderTravaerse..\n");
-  PostOrderTravaerse(root);
+	PostOrderTravaerse(root);
 	printf("\nDone\n");
 
 	return 0;
