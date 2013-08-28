@@ -22,5 +22,5 @@ int main()
   PostOrderTravaerse(root);
 	printf("\nDone\n");
 
-	return 0;	
+	return 0;
 }
