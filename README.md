@@ -1,4 +1,0 @@
-Algorithms
-==========
-
-c algorithms
