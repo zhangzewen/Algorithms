@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-void main()
+int main()
 {
 	BiTree T=NULL;
 	Insert_Binary_Sort_Tree(&T,'G');
