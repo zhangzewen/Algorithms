@@ -230,6 +230,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	BiTree p = NULL;
 
 	BiTree node = NULL;
+	BiTree bf = NULL;
 
 	if(NULL == *T) {
 		return -1;
@@ -238,14 +239,32 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	if((ret = Banlanced_Binary_Tree_find(*T, element, p)) != 0)	 { // check the element is in or not in the AVL
 		return -1;
 	}
+	
+	node = Create_BiTNode();
+	
+	if(NULL == node) {
+		return -1;
+	}
 
+	node->data = element;
+	
+	if(p->data - element > 0) {
+		p->rchild = node;
+		node->parent = p;
+		while(p) {
+			p->High -= 1;
+			p = p->parent;	
+		}
+	}
 
-	
-	
-
-		
-	
-	
+	if(p->data - element < 0) {
+		p->lchild = node;
+		node->parent = p;
+		while(p){
+			p->High += 1;
+			p = p->parent;
+		}
+	}
 
 	return 0;
 }
@@ -260,3 +279,113 @@ BiTree Banlanced_Binary_Tree_build_from_BST(BiTree T) // transform BST to AVL
 {
 	return 0;
 }
+
+
+
+
+/*
+
+=================================================================
+add
+
+<1> 左左
+								x															a
+							 /														 / \
+<a>						a     ---------->             y   x
+						 /
+						y
+
+
+
+
+<b>           x                                a
+             /\                               / \
+            a  b                             c   x
+           /\      --------------->         /   / \
+          c  d                             y   d   b
+         /
+        y
+
+
+
+<2>右右
+
+             x                                 a 
+              \                               / \
+<a>            a --------------->            x   y           
+                \
+                 y  
+
+
+
+
+
+
+
+
+<b>              x                                              b
+                / \                                            / \
+               a   b               -------------->            x   d
+									/ \                                        / \   \
+                 c   d                                      a   c   y 
+                      \                                          
+                       y 
+<3>左右
+
+
+                   x            x                   y      
+                  /            /                   / \
+<a>              a      --->  a           --->    a   x
+                  \          /
+                   y        y
+
+
+                 x                  x                  d
+                / \                / \                / \
+<b>            a   b              d   b              a   x
+              / \       ---->    / \      ---->     /   / \  
+             c   d              a   y              c   y   b
+                  \            /
+                   y          c
+
+<4>右右
+
+             x                   a
+              \                 / \
+<a>            a   ---- >      x   y
+              /  
+             y  
+
+
+
+                x                      x                       c
+               / \                    / \                     / \
+              b   a        ---->     b   c   ----->          x   a
+                 / \                    / \                 /   / \
+<b>             c   d                  y   a               b   y   d
+                 \                          \
+                  y                          d   
+
+
+==========================================================================
+del
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
