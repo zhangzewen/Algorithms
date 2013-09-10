@@ -1,6 +1,15 @@
 #include<stdio.h>
 #include"Banlanced_Binary_Tree.h"
 #include<stdlib.h>
+enum Route_stat{
+	ROUTE_RIGHT_RIGHT = 0,
+	ROUTE_LIFT_LIFT,
+	ROUTE_RIGHT_LIFT,
+	ROUTE_LIFT_RIGHT,
+	ROUTE_DONE
+	FIND_LEAST_ROUTE,
+	BANLANCED_TREE_BUILD_DONE
+};
 
 SqStack InitStack(SqStack S)
 {
@@ -281,7 +290,8 @@ BiTree Banlanced_Binary_Tree_build_from_BST(BiTree T) // transform BST to AVL
 }
 
 
-
+int Route_left();
+int Route_right();
 
 /*
 
