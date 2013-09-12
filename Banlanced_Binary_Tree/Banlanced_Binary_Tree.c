@@ -1,7 +1,14 @@
 #include<stdio.h>
 #include"Banlanced_Binary_Tree.h"
 #include<stdlib.h>
-enum Route_stat{
+
+
+#define ELEMENT_IN_AVL
+#define ELEMENT_NOT_IN_AVL
+#define ELEMENT_CAN_NOT_MALLOC
+
+
+static enum Route_stat{
 	ROUTE_RIGHT_RIGHT = 0,
 	ROUTE_LIFT_LIFT,
 	ROUTE_RIGHT_LIFT,
@@ -242,17 +249,20 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	BiTree bf = NULL;
 
 	if(NULL == *T) {
-		return -1;
+		*T = Create_Node();
+		if(*T == NULL) {
+			return ELEMENT_CAN_NOT_MALLOC;
+		}
 	}	
 
 	if((ret = Banlanced_Binary_Tree_find(*T, element, p)) != 0)	 { // check the element is in or not in the AVL
-		return -1;
+		return ELEMENT_IN_AVL;
 	}
 	
 	node = Create_BiTNode();
 	
 	if(NULL == node) {
-		return -1;
+		return ELEMENT_CAN_NOT_MALLOC;
 	}
 
 	node->data = element;
@@ -262,8 +272,13 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		node->parent = p;
 		while(p) {
 			p->High -= 1;
+			if( p->High > 1 || p->High < -1) {
+				bf = p;
+			}
 			p = p->parent;	
 		}
+
+		
 	}
 
 	if(p->data - element < 0) {
@@ -271,6 +286,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		node->parent = p;
 		while(p){
 			p->High += 1;
+			if(p->High > 1 || p->High < -1) {
+				bf = p;
+			}
 			p = p->parent;
 		}
 	}
