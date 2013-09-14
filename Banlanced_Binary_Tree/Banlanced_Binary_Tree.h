@@ -17,10 +17,7 @@ typedef struct BiTNode
 	TElemType  data;
 	int lflag;
 	int rflag;
-	
-	int rHigh;
-	int lHigh;
-
+	int High;
 	struct BiTnode *parent;
 	struct BiTNode *lchild,*rchild;
 }*BiTree;
@@ -60,10 +57,12 @@ BiTree Pop(SqStack S);
 void Print(SqStack S);
 
 //------------------manage Banlanced_Binary_Tree-------------------
-BiTree Banlanced_Binary_Tree_find(BiTree T, char element);
+int Banlanced_Binary_Tree_find(BiTree T, char element);
 int Banlanced_Binary_Tree_insert(BiTree *T, char element);
-int Banlanced_Binary_Tree_delete(BiTree *T, char element);
-BiTree Banlanced_Binary_Tree_build_from_BST(BiTree T);
-
+void Route_right(BiTree *p);
+void Route_left(BiTree *p);
+void Balanced_right(BiTree *p);
+void Balanced_left(BiTree *p);
+void Balanced_node(BiTree *p, int op);
 
 #endif

@@ -8,15 +8,6 @@
 #define ELEMENT_CAN_NOT_MALLOC
 
 
-static enum Route_stat{
-	ROUTE_RIGHT_RIGHT = 0,
-	ROUTE_LIFT_LIFT,
-	ROUTE_RIGHT_LIFT,
-	ROUTE_LIFT_RIGHT,
-	ROUTE_DONE
-	FIND_LEAST_ROUTE,
-	BANLANCED_TREE_BUILD_DONE
-};
 
 SqStack InitStack(SqStack S)
 {
@@ -208,8 +199,7 @@ BiTree Create_BiTNode()
 	node->lflag = 0;
 	node->rflag = 0;
 	
-	node->rHigh = 0;
-	node->lHigh = 0;
+	node->High = 0;
 	
 	node->data = '0';
 	
@@ -217,6 +207,11 @@ BiTree Create_BiTNode()
 	
 }
 
+void Route_right(BiTree *p);
+void Route_left(BiTree *p);
+void Balanced_right(BiTree *p);
+void Balanced_left(BiTree *p);
+void Balanced_node(BiTree *p, int op);
 int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree p) // find element in AVL, and return it
 {
 
@@ -226,15 +221,15 @@ int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree p) // find element
 
 	p = T;
 
-	if(T->data - element > 0) {
-		return Banlanced_Binary_Tree_find(T->lchild, element);
+	if(p->data - element > 0) {
+		return Banlanced_Binary_Tree_find(p->lchild, element);
 	}
 	
-	if(T->data - element < 0) {
-		return Banlanced_Binary_Tree_find(T->rchild, element);
+	if(p->data - element < 0) {
+		return Banlanced_Binary_Tree_find(p->rchild, element);
 	}
 
-	if(T->data - element == 0) {
+	if(p->data - element == 0) {
 		return 0;
 	}
 	
@@ -272,13 +267,11 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	node->data = element;
 	
 	if(p->data - element > 0) {
-		int ret = 0;
 		p->rchild = node;
 		node->parent = p;
 		while(p) {
-			p->lHigh += 1;
-			ret = p->lHigh - p->rHigh;
-			if(ret > 1 ||  ret < -1) {
+			p->High += 1;
+			if(p->High > 1 ||  p->High < -1) {
 				bf = p; //找出要平衡的节点
 				break;
 			}
@@ -287,17 +280,14 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		
 		Balanced_node(bf, 1);
 	
-		return 0;	
 	}
 
 	if(p->data - element < 0) {
-		int ret = 0;
 		p->lchild = node;
 		node->parent = p;
 		while(p){
-			p->rHigh += 1;
-			ret = p->lHigh - p->rHigh;
-			if(ret > 1 || ret < -1) {
+			p->High -= 1;
+			if(p->High > 1 || p->High < -1) {
 				bf = p;
 				break;
 			}
@@ -307,9 +297,8 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		Balanced_node(bf, -1);
 	}
 
-	return 0;
 }
-
+#if 0
 int Banlanced_Binary_Tree_delete(BiTree *T, char element) // delete a element from a AVL, and make the new tree to AVL
 {
 	return 0;
@@ -320,12 +309,12 @@ BiTree Banlanced_Binary_Tree_build_from_BST(BiTree T) // transform BST to AVL
 {
 	return 0;
 }
+#endif
 
-
-void Route_right(BiTNode *p)
+void Route_right(BiTree *p)
 {
-	BiTNode left_child = NULL;
-	BiTNode tmp = NULL;
+	BiTree left_child = NULL;
+	BiTree tmp = NULL;
 
 	left_child = *P->lchild;
 	
@@ -341,12 +330,15 @@ void Route_right(BiTNode *p)
 	
 	*p = left_child;
 	
+	*p->High = 0;
+	*p->rchild->High = 0;
+	
 }
 
-void Route_left(BiTNode *p)
+void Route_left(BiTree *p)
 {
-	BiTNode right_child = NULL;
-	BiTNode tmp = NULL;
+	BiTree right_child = NULL;
+	BiTree tmp = NULL;
 	
 	right_child = *p->rchild;
 	
@@ -363,12 +355,15 @@ void Route_left(BiTNode *p)
 	*p->rchild = tmp;
 	
 	*p = right_child;
+	
+	*p->High = 0;
+	*p->lchild->High = 0;
 }
 
-void Balanced_right(BiTNode *p)
+void Balanced_right(BiTree *p)
 {
-	BiTNode left_child = NULL;
-	BiTNode left_right_child = NULL;
+	BiTree left_child = NULL;
+	BiTree left_right_child = NULL;
 	
 	left_child = *p->lchild;
 	
@@ -379,14 +374,17 @@ void Balanced_right(BiTNode *p)
 	left_right_child->lchild = left_child;
 	left_child->parent = left_right_child;
 	left_child->rchild = NULL;
+
+	left_child->High = 0;
+	left_right_child->High = 1;
 	
 	Route_right(p);
 }
 
-void Balanced_left(BiTnode *p)
+void Balanced_left(BiTree *p)
 {
-	BiTNode  right_child = NULL;
-	BiTNode right_left_child = NULL;
+	BiTree right_child = NULL;
+	BiTree right_left_child = NULL;
 	right_child = *p->rchild;
 	right_left_child = right_child->lchild;
 
@@ -396,10 +394,13 @@ void Balanced_left(BiTnode *p)
 	right_child->parent =right_left_child;
 	right_child->lchild = NULL;
 
+	right_child->High = 0;
+	right_left->High = -1;
+
 	Route_left(p);
 }
 
-void Balanced_node(BiTnode *p, int op) 
+void Balanced_node(BiTree *p, int op) 
 {
 	switch(*p->High) {
 		case -1:
