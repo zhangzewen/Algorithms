@@ -212,21 +212,22 @@ void Route_left(BiTree *p);
 void Balanced_right(BiTree *p);
 void Balanced_left(BiTree *p);
 void Balanced_node(BiTree *p, int op);
-int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree p) // find element in AVL, and return it
+
+int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree *p) // find element in AVL, and return it
 {
 
 	if(NULL == T){
 		return -1; 
 	}
 
-	p = T;
+	*p = T;
 
 	if(p->data - element > 0) {
-		return Banlanced_Binary_Tree_find(p->lchild, element);
+		return Banlanced_Binary_Tree_find(p->lchild, element, *p);
 	}
 	
 	if(p->data - element < 0) {
-		return Banlanced_Binary_Tree_find(p->rchild, element);
+		return Banlanced_Binary_Tree_find(p->rchild, element, *p);
 	}
 
 	if(p->data - element == 0) {
@@ -246,7 +247,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	BiTree ptr_root = NULL;
 
 	if(NULL == *T) {
-		*T = Create_Node();
+		*T = Create_BiTNode();
 		if(*T == NULL) {
 			return ELEMENT_CAN_NOT_MALLOC;
 		}
@@ -254,7 +255,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 
 	ptr_root = *T;
 
-	if((ret = Banlanced_Binary_Tree_find(*T, element, p)) != 0)	 { // check the element is in or not in the AVL
+	if((ret = Banlanced_Binary_Tree_find(T, element, &p)) != 0)	 { // check the element is in or not in the AVL
 		return ELEMENT_IN_AVL;
 	}
 	
@@ -316,7 +317,7 @@ void Route_right(BiTree *p)
 	BiTree left_child = NULL;
 	BiTree tmp = NULL;
 
-	left_child = *P->lchild;
+	left_child = *p->lchild;
 	
 	if(left_child->rchild != NULL) {
 		tmp = left_child->rchild;
@@ -395,7 +396,7 @@ void Balanced_left(BiTree *p)
 	right_child->lchild = NULL;
 
 	right_child->High = 0;
-	right_left->High = -1;
+	right_left_child->High = -1;
 
 	Route_left(p);
 }

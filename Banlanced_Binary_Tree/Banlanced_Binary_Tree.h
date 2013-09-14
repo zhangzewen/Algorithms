@@ -11,10 +11,9 @@
 #define OVERFLOW	-1
 
 typedef int Status;
-typedef char TElemType;
 typedef struct BiTNode
 {
-	TElemType  data;
+	char  data;
 	int lflag;
 	int rflag;
 	int High;
@@ -57,7 +56,7 @@ BiTree Pop(SqStack S);
 void Print(SqStack S);
 
 //------------------manage Banlanced_Binary_Tree-------------------
-int Banlanced_Binary_Tree_find(BiTree T, char element);
+int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree *p);
 int Banlanced_Binary_Tree_insert(BiTree *T, char element);
 void Route_right(BiTree *p);
 void Route_left(BiTree *p);
