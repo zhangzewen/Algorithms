@@ -267,6 +267,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		node->parent = p;
 		while(p) {
 			p->High += 1;
+			if(p->rchild != NULL) {
+				break;
+			}
 			if(p->High > 1 ||  p->High < -1) {
 				bf = p; //找出要平衡的节点
 				break;
@@ -277,11 +280,14 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			Balanced_node(&bf, 1);
 		}
 	
-	}else {
+	}else if (p->data - element < 0) {
 		p->rchild = node;
 		node->parent = p;
 		while(p){
 			p->High -= 1;
+			if(p->lchild != NULL) {
+				break;
+			}
 			if(p->High > 1 || p->High < -1) {
 				bf = p;
 				break;
@@ -292,7 +298,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			Balanced_node(&bf, -1);
 		}
 	}
-
+	return 0;
 }
 #if 0
 int Banlanced_Binary_Tree_delete(BiTree *T, char element) // delete a element from a AVL, and make the new tree to AVL
