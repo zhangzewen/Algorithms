@@ -208,7 +208,8 @@ BiTree Create_BiTNode()
 	node->lflag = 0;
 	node->rflag = 0;
 	
-	node->High = 0;
+	node->rHigh = 0;
+	node->lHigh = 0;
 	
 	node->data = '0';
 	
@@ -247,6 +248,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 
 	BiTree node = NULL;
 	BiTree bf = NULL;
+	BiTree ptr_root = NULL;
 
 	if(NULL == *T) {
 		*T = Create_Node();
@@ -254,6 +256,8 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			return ELEMENT_CAN_NOT_MALLOC;
 		}
 	}	
+
+	ptr_root = *T;
 
 	if((ret = Banlanced_Binary_Tree_find(*T, element, p)) != 0)	 { // check the element is in or not in the AVL
 		return ELEMENT_IN_AVL;
@@ -268,29 +272,39 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	node->data = element;
 	
 	if(p->data - element > 0) {
+		int ret = 0;
 		p->rchild = node;
 		node->parent = p;
 		while(p) {
-			p->High -= 1;
-			if( p->High > 1 || p->High < -1) {
-				bf = p;
+			p->lHigh += 1;
+			ret = p->lHigh - p->rHigh;
+			if(ret > 1 ||  ret < -1) {
+				bf = p; //找出要平衡的节点
+				break;
 			}
 			p = p->parent;	
 		}
-
 		
+		Balanced_node(bf, 1);
+	
+		return 0;	
 	}
 
 	if(p->data - element < 0) {
+		int ret = 0;
 		p->lchild = node;
 		node->parent = p;
 		while(p){
-			p->High += 1;
-			if(p->High > 1 || p->High < -1) {
+			p->rHigh += 1;
+			ret = p->lHigh - p->rHigh;
+			if(ret > 1 || ret < -1) {
 				bf = p;
+				break;
 			}
 			p = p->parent;
 		}
+
+		Balanced_node(bf, -1);
 	}
 
 	return 0;
@@ -308,8 +322,119 @@ BiTree Banlanced_Binary_Tree_build_from_BST(BiTree T) // transform BST to AVL
 }
 
 
-int Route_left();
-int Route_right();
+void Route_right(BiTNode *p)
+{
+	BiTNode left_child = NULL;
+	BiTNode tmp = NULL;
+
+	left_child = *P->lchild;
+	
+	if(left_child->rchild != NULL) {
+		tmp = left_child->rchild;
+	}
+
+	left_child->parent = *p->parent;
+	*p->parent = left_child;
+	left_child->rchild = *p;
+	
+	*p->lchild = tmp;
+	
+	*p = left_child;
+	
+}
+
+void Route_left(BiTNode *p)
+{
+	BiTNode right_child = NULL;
+	BiTNode tmp = NULL;
+	
+	right_child = *p->rchild;
+	
+	if(right_child->lchild != NULL) {
+		tmp = right_child->left;
+	}
+
+	right_child->parent = *p->parent;
+	
+	*p->parent = right_child;
+	
+	right_child->lchild = *p;
+
+	*p->rchild = tmp;
+	
+	*p = right_child;
+}
+
+void Balanced_right(BiTNode *p)
+{
+	BiTNode left_child = NULL;
+	BiTNode left_right_child = NULL;
+	
+	left_child = *p->lchild;
+	
+	left_right_child = left_child->rchild;
+
+	*p->lchild = left_right_child;
+	left_right_child->parent = *p;
+	left_right_child->lchild = left_child;
+	left_child->parent = left_right_child;
+	left_child->rchild = NULL;
+	
+	Route_right(p);
+}
+
+void Balanced_left(BiTnode *p)
+{
+	BiTNode  right_child = NULL;
+	BiTNode right_left_child = NULL;
+	right_child = *p->rchild;
+	right_left_child = right_child->lchild;
+
+	*p->rchild = right_left_child;
+	right_left_child->parent = *p;
+	right_left_child->rchild = right_child;
+	right_child->parent =right_left_child;
+	right_child->lchild = NULL;
+
+	Route_left(p);
+}
+
+void Balanced_node(BiTnode *p, int op) 
+{
+	switch(*p->High) {
+		case -1:
+		case 0:
+		case 1:
+			break;
+		case -2:
+			switch(op){
+				case 1:
+					Balanced_left(p);	
+					break;
+				case -1:
+					Route_left(p);
+					break;
+				default:
+					break;
+			}	
+			break;
+		case 2:
+			switch(op){
+				case -1:
+					Balanced_right(p);	
+					break;
+				case 1:
+					Route_right(p);
+					break;
+				default:
+					break;
+			}	
+			break;
+		default:
+			break;
+	}
+}
+
 
 /*
 
@@ -363,9 +488,9 @@ add
 
                    x            x                   y      
                   /            /                   / \
-<a>              a      --->  a           --->    a   x
+<a>              a      --->  y           --->    a   x
                   \          /
-                   y        y
+                   y        a
 
 
                  x                  x                  d
@@ -376,13 +501,13 @@ add
                   \            /
                    y          c
 
-<4>右右
+<4>右左
 
-             x                   a
-              \                 / \
-<a>            a   ---- >      x   y
-              /  
-             y  
+             x                   x                               y
+              \                   \                             / \
+<a>            a   ---- >          y    ------------->         x   a
+              /                     \
+             y                       a 
 
 
 

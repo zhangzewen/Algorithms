@@ -17,7 +17,9 @@ typedef struct BiTNode
 	TElemType  data;
 	int lflag;
 	int rflag;
-	int High;
+	
+	int rHigh;
+	int lHigh;
 
 	struct BiTnode *parent;
 	struct BiTNode *lchild,*rchild;
