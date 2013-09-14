@@ -11,14 +11,14 @@
 #define OVERFLOW	-1
 
 typedef int Status;
+
 typedef struct BiTNode
 {
 	char  data;
 	int lflag;
 	int rflag;
 	int High;
-	struct BiTnode *parent;
-	struct BiTNode *lchild,*rchild;
+	struct BiTNode *lchild,*rchild, *parent;
 }*BiTree;
 
 

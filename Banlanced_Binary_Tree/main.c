@@ -14,5 +14,5 @@ int main(int argc, char *argv[])
 	Banlanced_Binary_Tree_insert(&T, 'q');
 	Banlanced_Binary_Tree_insert(&T, 'v');
 	Banlanced_Binary_Tree_insert(&T, 's');
-	
+	InOrderTraveerse(T);	
 }

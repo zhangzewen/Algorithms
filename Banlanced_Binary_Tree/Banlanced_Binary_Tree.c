@@ -2,13 +2,6 @@
 #include"Banlanced_Binary_Tree.h"
 #include<stdlib.h>
 
-
-#define ELEMENT_IN_AVL
-#define ELEMENT_NOT_IN_AVL
-#define ELEMENT_CAN_NOT_MALLOC
-
-
-
 SqStack InitStack(SqStack S)
 {
 	S=(SqStack)malloc(sizeof(struct Stack));
@@ -222,19 +215,19 @@ int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree *p) // find elemen
 
 	*p = T;
 
-	if(p->data - element > 0) {
-		return Banlanced_Binary_Tree_find(p->lchild, element, *p);
+	if(T->data - element > 0  &&  T->lchild) {
+		return Banlanced_Binary_Tree_find(T->lchild, element, p);
 	}
 	
-	if(p->data - element < 0) {
-		return Banlanced_Binary_Tree_find(p->rchild, element, *p);
+	if(T->data - element < 0 &&  T->rchild) {
+		return Banlanced_Binary_Tree_find(T->rchild, element, p);
 	}
 
-	if(p->data - element == 0) {
-		return 0;
+	if(T->data - element == 0) {
+		return 1;
 	}
 	
-	return -1;
+	return 0;	
 }
 
 int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a AVL, and make the new tree to AVL
@@ -249,26 +242,28 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	if(NULL == *T) {
 		*T = Create_BiTNode();
 		if(*T == NULL) {
-			return ELEMENT_CAN_NOT_MALLOC;
+			return -1;
 		}
+		
+		(*T)->data = element;
 	}	
 
 	ptr_root = *T;
 
-	if((ret = Banlanced_Binary_Tree_find(T, element, &p)) != 0)	 { // check the element is in or not in the AVL
-		return ELEMENT_IN_AVL;
+	if((ret = Banlanced_Binary_Tree_find(*T, element, &p)) != 0)	 { // check the element is in or not in the AVL
+		return -1;
 	}
 	
 	node = Create_BiTNode();
 	
 	if(NULL == node) {
-		return ELEMENT_CAN_NOT_MALLOC;
+		return -1;
 	}
 
 	node->data = element;
 	
 	if(p->data - element > 0) {
-		p->rchild = node;
+		p->lchild = node;
 		node->parent = p;
 		while(p) {
 			p->High += 1;
@@ -278,13 +273,12 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			}
 			p = p->parent;	
 		}
-		
-		Balanced_node(bf, 1);
+		if(bf != NULL) {	
+			Balanced_node(&bf, 1);
+		}
 	
-	}
-
-	if(p->data - element < 0) {
-		p->lchild = node;
+	}else {
+		p->rchild = node;
 		node->parent = p;
 		while(p){
 			p->High -= 1;
@@ -294,8 +288,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			}
 			p = p->parent;
 		}
-
-		Balanced_node(bf, -1);
+		if(bf != NULL) {
+			Balanced_node(&bf, -1);
+		}
 	}
 
 }
@@ -317,22 +312,22 @@ void Route_right(BiTree *p)
 	BiTree left_child = NULL;
 	BiTree tmp = NULL;
 
-	left_child = *p->lchild;
+	left_child = (*p)->lchild;
 	
 	if(left_child->rchild != NULL) {
 		tmp = left_child->rchild;
 	}
 
-	left_child->parent = *p->parent;
-	*p->parent = left_child;
+	left_child->parent = (*p)->parent;
+	(*p)->parent = left_child;
 	left_child->rchild = *p;
 	
-	*p->lchild = tmp;
+	(*p)->lchild = tmp;
 	
-	*p = left_child;
+	(*p) = left_child;
 	
-	*p->High = 0;
-	*p->rchild->High = 0;
+	(*p)->High = 0;
+	(*p)->rchild->High = 0;
 	
 }
 
@@ -341,24 +336,24 @@ void Route_left(BiTree *p)
 	BiTree right_child = NULL;
 	BiTree tmp = NULL;
 	
-	right_child = *p->rchild;
+	right_child = (*p)->rchild;
 	
 	if(right_child->lchild != NULL) {
-		tmp = right_child->left;
+		tmp = right_child->lchild;
 	}
 
-	right_child->parent = *p->parent;
+	right_child->parent = (*p)->parent;
 	
-	*p->parent = right_child;
+	(*p)->parent = right_child;
 	
-	right_child->lchild = *p;
+	right_child->lchild = (*p);
 
-	*p->rchild = tmp;
+	(*p)->rchild = tmp;
 	
-	*p = right_child;
+	(*p) = right_child;
 	
-	*p->High = 0;
-	*p->lchild->High = 0;
+	(*p)->High = 0;
+	(*p)->lchild->High = 0;
 }
 
 void Balanced_right(BiTree *p)
@@ -366,12 +361,12 @@ void Balanced_right(BiTree *p)
 	BiTree left_child = NULL;
 	BiTree left_right_child = NULL;
 	
-	left_child = *p->lchild;
+	left_child = (*p)->lchild;
 	
 	left_right_child = left_child->rchild;
 
-	*p->lchild = left_right_child;
-	left_right_child->parent = *p;
+	(*p)->lchild = left_right_child;
+	left_right_child->parent = (*p);
 	left_right_child->lchild = left_child;
 	left_child->parent = left_right_child;
 	left_child->rchild = NULL;
@@ -386,11 +381,11 @@ void Balanced_left(BiTree *p)
 {
 	BiTree right_child = NULL;
 	BiTree right_left_child = NULL;
-	right_child = *p->rchild;
+	right_child = (*p)->rchild;
 	right_left_child = right_child->lchild;
 
-	*p->rchild = right_left_child;
-	right_left_child->parent = *p;
+	(*p)->rchild = right_left_child;
+	right_left_child->parent = (*p);
 	right_left_child->rchild = right_child;
 	right_child->parent =right_left_child;
 	right_child->lchild = NULL;
@@ -403,7 +398,7 @@ void Balanced_left(BiTree *p)
 
 void Balanced_node(BiTree *p, int op) 
 {
-	switch(*p->High) {
+	switch((*p)->High) {
 		case -1:
 		case 0:
 		case 1:
