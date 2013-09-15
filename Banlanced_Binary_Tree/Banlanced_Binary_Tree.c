@@ -230,6 +230,44 @@ int Banlanced_Binary_Tree_find(BiTree T, char element, BiTree *p) // find elemen
 	return 0;	
 }
 
+int reset_High(BiTree *p, BiTree *ptr)
+{
+	int ret = 0;
+	BiTree current;
+	BiTree tmp;
+	current = *p;
+	if(current->High == 0)	{
+		return 0;
+	}
+	
+	tmp = current;
+		
+	current = current->parent;
+	
+	while(current) {
+
+		if(current->lchild == tmp) {
+			current->High += 1;
+		}
+		
+		if(current->rchild == tmp) {
+			current->High -= 1;
+		}
+
+		if((current->High > 1 || current->High < -1) && !ret) {
+			*ptr = current;
+			ret++;
+		}
+		
+		tmp = current;
+		current = current->parent;	
+		
+	}
+	
+	return 0;	
+}
+
+
 int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a AVL, and make the new tree to AVL
 {
 	int ret = 0;
@@ -265,6 +303,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	if(p->data - element > 0) {
 		p->lchild = node;
 		node->parent = p;
+		p->High += 1;
+		reset_High(&p, &bf);
+#if 0
 		while(p) {
 			p->High += 1;
 			if(p->rchild != NULL) {
@@ -276,6 +317,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			}
 			p = p->parent;	
 		}
+#endif
 		if(bf != NULL) {	
 			Balanced_node(&bf, 1);
 		}
@@ -283,6 +325,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	}else if (p->data - element < 0) {
 		p->rchild = node;
 		node->parent = p;
+		p->High -= 1;
+		reset_High(&p, &bf);
+#if 0
 		while(p){
 			p->High -= 1;
 			if(p->lchild != NULL) {
@@ -294,6 +339,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 			}
 			p = p->parent;
 		}
+#endif
 		if(bf != NULL) {
 			Balanced_node(&bf, -1);
 		}
