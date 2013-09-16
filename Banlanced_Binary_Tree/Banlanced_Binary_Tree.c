@@ -336,6 +336,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		if(bf != NULL) {	
 			Balanced_node(&bf, 1);
 			reset_root_high(&bf);
+			if(bf->parent == NULL) {
+				*T = bf;
+			}
 		}
 	
 	}else if (p->data - element < 0) {
@@ -346,6 +349,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		if(bf != NULL) {
 			Balanced_node(&bf, -1);
 			reset_root_high(&bf);
+			if(bf->parent == NULL) {
+				*T = bf;
+			}
 		}
 	}
 	return 0;
