@@ -112,7 +112,9 @@ void InOrderTraveerse(BiTree T)
 			else
 			{
 				p=Pop(S);
-				printf("%4c",p->data);
+				//printf("self: %p, data:%4c, parent:%p, lchild: %p, rchild: %p, High:%d\n", p, p->data, p->parent, p->lchild, p->rchild, p->High);
+				printf("%c:%d  ", p->data, p->High);
+				
 				p=p->rchild;
 			}
 		}
@@ -266,6 +268,32 @@ int reset_High(BiTree *p, BiTree *ptr)
 	
 	return 0;	
 }
+void reset_root_high(BiTree *p)
+{
+	BiTree current;
+	BiTree tmp;
+	current = *p;
+	
+	tmp = current;
+		
+	current = current->parent;
+	while(current) {
+
+		if(current->lchild == tmp) {
+			current->High -= 1;
+		}
+		
+		if(current->rchild == tmp) {
+			current->High += 1;
+		}
+
+		
+		tmp = current;
+		current = current->parent;	
+		
+	}
+}
+
 
 
 int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a AVL, and make the new tree to AVL
@@ -305,21 +333,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		node->parent = p;
 		p->High += 1;
 		reset_High(&p, &bf);
-#if 0
-		while(p) {
-			p->High += 1;
-			if(p->rchild != NULL) {
-				break;
-			}
-			if(p->High > 1 ||  p->High < -1) {
-				bf = p; //找出要平衡的节点
-				break;
-			}
-			p = p->parent;	
-		}
-#endif
 		if(bf != NULL) {	
 			Balanced_node(&bf, 1);
+			reset_root_high(&bf);
 		}
 	
 	}else if (p->data - element < 0) {
@@ -327,21 +343,9 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 		node->parent = p;
 		p->High -= 1;
 		reset_High(&p, &bf);
-#if 0
-		while(p){
-			p->High -= 1;
-			if(p->lchild != NULL) {
-				break;
-			}
-			if(p->High > 1 || p->High < -1) {
-				bf = p;
-				break;
-			}
-			p = p->parent;
-		}
-#endif
 		if(bf != NULL) {
 			Balanced_node(&bf, -1);
+			reset_root_high(&bf);
 		}
 	}
 	return 0;
@@ -371,6 +375,16 @@ void Route_right(BiTree *p)
 	}
 
 	left_child->parent = (*p)->parent;
+	if((*p)->parent != NULL) {
+		if((*p)->parent->lchild == *p) {
+			(*p)->parent->lchild = left_child;
+		}
+		
+		if((*p)->parent->rchild == *p) {
+			(*p)->parent->rchild = left_child;
+		}
+	}
+
 	(*p)->parent = left_child;
 	left_child->rchild = *p;
 	
@@ -395,6 +409,15 @@ void Route_left(BiTree *p)
 	}
 
 	right_child->parent = (*p)->parent;
+	if((*p)->parent != NULL) {
+		if((*p)->parent->lchild == *p) {
+			(*p)->parent->lchild = right_child;
+		}
+		
+		if((*p)->parent->rchild == *p) {
+			(*p)->parent->rchild = right_child;
+		}
+	}
 	
 	(*p)->parent = right_child;
 	
