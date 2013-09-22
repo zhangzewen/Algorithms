@@ -159,7 +159,8 @@ void PostOrderTravaerse(BiTree T)
 			}
 		}
 		p = Pop(S);
-		printf("%4c", p->data);
+		//printf("self: %p, data:%4c, parent:%p, lchild: %p, rchild: %p, High:%d\n", p, p->data, p->parent, p->lchild, p->rchild, p->High);
+		printf("%c:%d  ", p->data, p->High);
 		if(StackEmpty(S)) {
 			return;
 		}
@@ -356,18 +357,163 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	}
 	return 0;
 }
-#if 0
+int reset_High_after_delete(BiTree *p, BiTree *ptr)
+{
+	int ret = 0;
+	BiTree current;
+	BiTree tmp;
+	current = *p;
+	if(current->High == 0)	{
+		return 0;
+	}
+	
+	tmp = current;
+		
+	current = current->parent;
+	
+	while(current) {
+
+		if(current->lchild == tmp) {
+			current->High -= 1;
+		}
+		
+		if(current->rchild == tmp) {
+			current->High += 1;
+		}
+
+		if((current->High > 1 || current->High < -1) && !ret) {
+			*ptr = current;
+			ret++;
+		}
+		
+		tmp = current;
+		current = current->parent;	
+		
+	}
+	
+	return 0;	
+}
+
 int Banlanced_Binary_Tree_delete(BiTree *T, char element) // delete a element from a AVL, and make the new tree to AVL
 {
+	int ret = 0;
+	BiTree p = NULL;
+	BiTree bf = NULL;
+	BiTree tmp = NULL;
+
+	if((ret = Banlanced_Binary_Tree_find(*T, element, &p)) != 1)	 { // check the element is in or not in the AVL
+		return -1;
+	}
+
+
+	if(p->lchild != NULL && p->rchild == NULL) { //左子树不为空，右子树为空
+		tmp = p->lchild;	
+		if(p->parent->lchild == p) {
+			p->parent->lchild = p->lchild;
+		}
+		if(p->parent->rchild == p) {
+			p->parent->rchild = p->lchild;	
+		}
+
+		p->lchild->parent = p->parent;
+		
+		free(p);
+		p = tmp;
+		reset_High_after_delete(&p, &bf);
+		
+		if(bf != NULL) {
+			Balanced_node(&bf, 0);
+			reset_root_high(&bf);
+			if(bf->parent == NULL) {
+				*T = bf;
+			}
+		}
+	}else if(p->rchild != NULL && p->lchild == NULL) {//左子树为空，右子树不为空
+		tmp = p->rchild;
+		if(p->parent->lchild == p) {
+			p->parent->lchild = p->rchild;
+		}
+		if(p->parent->rchild == p) {
+			p->parent->rchild = p->rchild;	
+		}
+
+		p->rchild->parent = p->parent;
+		
+		free(p);
+		p = tmp;
+		reset_High_after_delete(&p, &bf);
+		
+		if(bf != NULL) {
+			Balanced_node(&bf, 0);
+			reset_root_high(&bf);
+			if(bf->parent == NULL) {
+				*T = bf;
+			}
+		}
+	}else if(p->rchild != NULL && p->lchild != NULL) {//左右子树都不为空
+		tmp = p;
+		
+		while(tmp->rchild) {
+			tmp = tmp->rchild;
+		}
+		
+		
+		p->data = tmp->data;
+		
+		reset_High_after_delete(&tmp, &bf);
+		
+		if(bf != NULL) {
+			Balanced_node(&bf, 0);
+			reset_root_high(&bf);
+			if(bf->parent == NULL) {
+				*T = bf;
+			}
+		}
+		free(tmp);
+		tmp = NULL;
+	}else {//左右子树都为空
+		
+		if(p->parent->High == 0) {
+
+			
+			if(p->parent->lchild == p) {
+				p->parent->lchild = NULL;
+			}
+
+			if(p->parent->rchild == p) {
+				p->parent->rchild == NULL;
+			}
+
+			
+			free(p);
+			p = NULL;
+			return 0;
+		}
+			
+		reset_High_after_delete(&p, &bf);
+
+		free(p);	
+
+		if(p->parent->lchild == p) {
+			p->parent->lchild = NULL;
+		}
+		if(p->parent->rchild == p) {
+			p->parent->rchild == NULL;
+		}
+
+		if(bf != NULL) {
+			Balanced_node(&bf, 0);
+			reset_root_high(&bf);
+			if(bf->parent == NULL) {
+				*T = bf;
+			}
+		}
+	}
+	
 	return 0;
 }
 
 
-BiTree Banlanced_Binary_Tree_build_from_BST(BiTree T) // transform BST to AVL
-{
-	return 0;
-}
-#endif
 
 void Route_right(BiTree *p)
 {
@@ -490,6 +636,7 @@ void Balanced_node(BiTree *p, int op)
 					Balanced_left(p);	
 					break;
 				case -1:
+				case 0:
 					Route_left(p);
 					break;
 				default:
@@ -502,6 +649,7 @@ void Balanced_node(BiTree *p, int op)
 					Balanced_right(p);	
 					break;
 				case 1:
+				case 0:
 					Route_right(p);
 					break;
 				default:
