@@ -357,6 +357,7 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	}
 	return 0;
 }
+#if 0
 int reset_High_after_delete(BiTree *p, BiTree *ptr)
 {
 	int ret = 0;
@@ -367,8 +368,7 @@ int reset_High_after_delete(BiTree *p, BiTree *ptr)
 		return 0;
 	}
 	
-	tmp = current;
-		
+	tmp = current;	
 	current = current->parent;
 	
 	while(current) {
@@ -451,17 +451,28 @@ int Banlanced_Binary_Tree_delete(BiTree *T, char element) // delete a element fr
 			}
 		}
 	}else if(p->rchild != NULL && p->lchild != NULL) {//左右子树都不为空
+		BiTree ptr = NULL;
 		tmp = p;
-		
+		tmp = tmp->lchild;	
 		while(tmp->rchild) {
 			tmp = tmp->rchild;
 		}
 		
+		ptr = tmp->parent;
+		
+		if(tmp == ptr->lchild) {
+			ptr->High -= 1;
+			ptr->lchild = NULL;
+		}
+		
+		if(tmp == ptr->rchild) {
+			ptr->High += 1;
+			ptr->rchild = NULL;
+		}
+		
+		reset_High_after_delete(&ptr, &bf);
 		
 		p->data = tmp->data;
-		
-		reset_High_after_delete(&tmp, &bf);
-		
 		if(bf != NULL) {
 			Balanced_node(&bf, 0);
 			reset_root_high(&bf);
@@ -469,37 +480,53 @@ int Banlanced_Binary_Tree_delete(BiTree *T, char element) // delete a element fr
 				*T = bf;
 			}
 		}
+		tmp->parent->rchild = NULL;
 		free(tmp);
 		tmp = NULL;
 	}else {//左右子树都为空
+		BiTree ptr = NULL;
 		
 		if(p->parent->High == 0) {
 
-			
-			if(p->parent->lchild == p) {
+			if(p == p->parent->lchild) {
+				p->parent->High -= 1;
 				p->parent->lchild = NULL;
 			}
-
-			if(p->parent->rchild == p) {
-				p->parent->rchild == NULL;
+			
+			if(p == p->parent->rchild) {
+				p->parent->High += 1;
+				p->parent->rchild = NULL;
 			}
-
 			
 			free(p);
 			p = NULL;
 			return 0;
 		}
+		
+		ptr = p->parent;	
+		
+		if(p == ptr->lchild) {
+			if(ptr->High == -1) {
+				ptr->High -= 1;	
+			}else if(ptr->High == 1) {
+				ptr->High -= 1;	
+			}
 			
+		}
+
+		if(p == ptr->rchild) {
+			if(ptr->High == -1) {
+				ptr->High += 1;
+				
+			}else if(ptr->High == 1) {
+				ptr->High += 1;
+			}
+			
+		}
 		reset_High_after_delete(&p, &bf);
 
 		free(p);	
 
-		if(p->parent->lchild == p) {
-			p->parent->lchild = NULL;
-		}
-		if(p->parent->rchild == p) {
-			p->parent->rchild == NULL;
-		}
 
 		if(bf != NULL) {
 			Balanced_node(&bf, 0);
@@ -512,7 +539,7 @@ int Banlanced_Binary_Tree_delete(BiTree *T, char element) // delete a element fr
 	
 	return 0;
 }
-
+#endif
 
 
 void Route_right(BiTree *p)

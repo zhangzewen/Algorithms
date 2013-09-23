@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
 	printf("\n----------------------------------------------------------------------\n");
 	Banlanced_Binary_Tree_insert(&T, 'i');
 	InOrderTraveerse(T);	
-#if 0
 	printf("\n----------------------------------------------------------------------\n");
 	Banlanced_Binary_Tree_insert(&T, 'j');
 	InOrderTraveerse(T);	
@@ -82,12 +81,13 @@ int main(int argc, char *argv[])
 	printf("\n----------------------------------------------------------------------\n");
 	Banlanced_Binary_Tree_insert(&T, 'z');
 	InOrderTraveerse(T);	
-#endif
+#if 0
 	printf("\n---------------------Insert done!-------------------------------------\n");
 	printf("\n---------------------Now delete--------------------------------------\n");
-	Banlanced_Binary_Tree_delete(&T, 'h');
+	Banlanced_Binary_Tree_delete(&T, 'f');
 	InOrderTraveerse(T);	
 	printf("\n----------------------------------------------------------------------\n");
+#endif
 //#endif
 #if 0
 	Banlanced_Binary_Tree_insert(&T, 'a');
