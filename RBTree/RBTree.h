@@ -15,6 +15,7 @@ typedef struct BiTNode
 	int lflag;
 	int rflag;
 	int High;
+	int color;
 	struct BiTNode *lchild,*rchild, *parent;
 }*BiTree;
 

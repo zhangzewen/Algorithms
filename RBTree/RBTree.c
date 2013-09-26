@@ -1,7 +1,6 @@
 #include "RBTree.h"
 
 #include<stdio.h>
-#include"Banlanced_Binary_Tree.h"
 #include<stdlib.h>
 
 SqStack InitStack(SqStack S)
@@ -29,10 +28,10 @@ BiTree GetTop(SqStack S)
 SqStack Push(SqStack S,BiTree e)
 {
 	if((S->top)-(S->base)>=(S->stacksize)){
-		S->base =(BiTree*)realloc(S->base,(S->stacksize + STACKINCREENT)*sizeof(struct BiTNode**));
+		S->base =(BiTree*)realloc(S->base,(S->stacksize + STACKINCREMENT)*sizeof(struct BiTNode**));
 
 		S->top=S->base+S->stacksize;
-		S->stacksize+=STACKINCREENT;
+		S->stacksize+=STACKINCREMENT;
 	}
 	*(S->top)=e;
 	S->top++;
