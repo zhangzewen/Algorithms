@@ -309,19 +309,22 @@ rb_node_t *rb_insert(key_t key, data_t data, rb_node_t *root)
 	return rb_insert_rebalance(node, root);
 }
 
-
+/*
+	用z表示当前节点，p[z]表示父节点，p[p[z]]表示祖父节点,y表示叔叔
+*/
 static rb_node_t *rb_insert_rebalance(rb_node_t *node, rb_node_t *root)
 {
-	rb_node_t *parent;
-	rb_node_t *gparent;
-	rb_node_t *uncle;
-	rb_node_t *tmp;
+	rb_node_t *parent;//父节点p[z]
+	rb_node_t *gparent;//祖父节点p[p[z]]
+	rb_node_t *uncle;//叔叔节点y
+	rb_node_t *tmp;//临时节点
 	
 	while ((parent = node->parent) && parent->color == RED) {
+		//parent 为node的父节点，且当父节点颜色为红 ?不该判断父节点是否为空（根节点）
 		gparent = parent->parent;
 		
-		if (parent == gparent->left) {
-			uncle = gparent->right;
+		if (parent == gparent->left) { //当祖父的左孩子即为父母时
+			uncle = gparent->right;//定义叔叔的概念
 
 			if (uncle && uncle->color == RED) {
 				uncle->color = BLACK;
