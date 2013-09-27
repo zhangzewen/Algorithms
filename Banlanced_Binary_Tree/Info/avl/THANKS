@@ -1,0 +1,15 @@
+Thanks to...
+                                       
+* Donald Knuth for _The Art of Computer Programming_.
+
+* Thomas Cormen, Charles Leiserson, and Ron Rivest for _Introduction
+  to Algorithms_.
+
+* David MacKenzie for writing Autoconf, the automatic configuration
+  tool.
+
+* David MacKenzie and Tom Tromey for writing Automake, the tool for
+  generating `Makefile's.
+
+* All those who have contributed bug reports and enhancements.  You
+  can find them listed individually in the NEWS and the ChangeLog.

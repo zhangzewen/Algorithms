@@ -358,20 +358,20 @@ int Banlanced_Binary_Tree_insert(BiTree *T, char element) // add a element to a 
 	return 0;
 }
 #if 0
-int reset_High_after_delete(BiTree *p, BiTree *ptr)
+/*
+	@op 这个标记是为了说明当删除一个节点的时候bf因子到底要不要去调整
+*/
+int reset_High_after_delete(BiTree *p, BiTree *ptr, int op)
 {
 	int ret = 0;
 	BiTree current;
 	BiTree tmp;
 	current = *p;
-	if(current->High == 0)	{
-		return 0;
-	}
-	
+
 	tmp = current;	
 	current = current->parent;
-	
-	while(current) {
+
+	while(current && op) {
 
 		if(current->lchild == tmp) {
 			current->High -= 1;
