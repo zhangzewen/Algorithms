@@ -324,52 +324,57 @@ static rb_node_t *rb_insert_rebalance(rb_node_t *node, rb_node_t *root)
 		gparent = parent->parent;
 		
 		if (parent == gparent->left) { //当祖父的左孩子即为父母时
-			uncle = gparent->right;//定义叔叔的概念
+			uncle = gparent->right;//定义叔叔的概念 ,叔叔就是父母的右孩子
 
-			if (uncle && uncle->color == RED) {
-				uncle->color = BLACK;
-				parent->color = BLACK;
+			if (uncle && uncle->color == RED) {//情况1:z的叔叔y是红色的
+				uncle->color = BLACK;//将叔叔节点y染黑
+				parent->color = BLACK;//z的父母p[z]染黑，解决z,p[z]都是红色的问题
 				gparent->color = RED;
 
-				node = gparent;
-			}else {
-				if (parent->right == node) {
-					root = rb_rotate_left(parent, root);
+				node = gparent; //将祖父当作新增节点z，指针z上移两层，且染红
+			//上述情况1中，只考虑了z作为父母的右孩子的情况
+			}else { //情况2：z的叔叔y是黑色的
+				if (parent->right == node) { //且z为右孩子
+					root = rb_rotate_left(parent, root); // 左旋[节点z，与父母节点]
 					tmp = parent;
 					parent = node;
-					node = tmp;
+					node = tmp; //parent与node互换角色
 				}
-				
+				//情况3：z的叔叔y是黑色的，此时z成了左孩子
+				//注意：1.情况3是由上述情况2变化而来的
+				//2：z的叔叔总是黑色的，否则就是情况1了
+				//z的父母p[z]染黑
+				//原祖父节点染红
+				//
 				parent->color = BLACK;
 				gparent->color = RED;
-				root = rb_rotate_right(gparent, root);
+				root = rb_rotate_right(gparent, root);//右旋[节点z，与祖父节点]
 			}
-		}else {
-			uncle = gparent->left;
-			if (uncle && uncle->color == RED) {
+		}else { //当祖父的右孩子是父母时
+			uncle = gparent->left;//祖父的左孩子作为叔叔的几点
+			if (uncle && uncle->color == RED) {//情况1：z的叔叔y是红色的 
 				uncle->color = BLACK;	
 				parent->color = BLACK;
 				gparent->color = RED;
-				node = gparent;
-			}else {
-				if (parent->left == node) {
-					root = rb_rotate_right(parent, root);
+				node = gparent;//同上
+			}else {//情况2：z的叔叔y是黑色的
+				if (parent->left == node) { //且z为左孩子
+					root = rb_rotate_right(parent, root);//以节点parent，root右旋
 					tmp = parent;
 					parent = node;
-					node = tmp;
+					node = tmp;//parent与node互换角色
 				}
-
+				//经过情况2的变化，成了情况3
 				parent->color = BLACK;
 				gparent->color = RED;
-				root = rb_rotate_left(gparent, root);
+				root = rb_rotate_left(gparent, root); //以节点gparent和root右旋
 			}
 		}
 	}
-
-	root->color = BLACK;
-	return root;
+	//当父亲节点为黑色的时候，红黑树的性质不变
+	root->color = BLACK;//根节点，不论怎样，都得置为黑色
+	return root; //返回根节点
 }
-
 
 rb_node_t *rb_erase(key_t key, rb_node_t *root)
 {
@@ -467,17 +472,19 @@ rb_node_t *rb_erase(key_t key, rb_node_t *root)
 
 	return root;
 }
+//红黑树修复删除的4中情况
+//x表示要删除的节点，*other， w表示兄弟节点
 static rb_node_t *rb_erase_rebalance(rb_node_t *node, rb_node_t *parent, rb_node_t *root)
 {
-	rb_node_t *other;
-	rb_node_t *o_left;
-	rb_node_t *o_right;
+	rb_node_t *other; //x的兄弟other
+	rb_node_t *o_left; //兄弟的左孩子
+	rb_node_t *o_right; //兄弟的右孩子
 	while ((!node || node->color == BLACK) && node != root) {
 		if (parent->left == node) {
 			other = parent->right;
-			if (other->color == RED) {
+			if (other->color == RED) { //情况1：x的兄弟w是红色的
 				other->color = BLACK;
-				parent->color = RED;
+				parent->color = RED;//改变颜色 w->黑色
 				root = rb_rotate_left(parent, root);
 				other = parent->right;
 			}
