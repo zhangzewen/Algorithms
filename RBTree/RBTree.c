@@ -202,7 +202,7 @@ static rb_node_t *rb_rotate_left(rb_node_t *node, rb_node_t *root)
 {
 	rb_node_t *right = node->right;
 
-	if ((node->right = right->left)) {
+	if ((node->right = right->left)) { //这个分两步走：1.先赋值，2.在判断赋值时候为空
 		right->left->parent = node;
 	}
 	
@@ -484,16 +484,16 @@ static rb_node_t *rb_erase_rebalance(rb_node_t *node, rb_node_t *parent, rb_node
 			other = parent->right;
 			if (other->color == RED) { //情况1：x的兄弟w是红色的
 				other->color = BLACK;
-				parent->color = RED;//改变颜色 w->黑色
-				root = rb_rotate_left(parent, root);
+				parent->color = RED;//改变颜色 w->黑色 , x的父节点染红
+				root = rb_rotate_left(parent, root);//在以x的父节点做一次左旋
 				other = parent->right;
 			}
 
 			if ((!other->left || other->left->color == BLACK) &&
-						(!other->right || other->right->color == BLACK)) {
-				other->color = RED;
-				node = parent;
-				parent = node->parent;
+						(!other->right || other->right->color == BLACK)) { // 情况2：x的兄弟w是黑色的，且w的两个孩子都是黑色的
+				other->color = RED;// 兄弟w变成为红色
+				node = parent; //父节点为新节点node
+				parent = node->parent; // 
 			}else {
 				if (!other->right ||  other->right->color == BLACK) {
 					if ((o_left = other->left)) {
