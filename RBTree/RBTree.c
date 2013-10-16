@@ -1,187 +1,14 @@
 #include "RBTree.h"
 #include <stdio.h>
 #include <stdlib.h>
-#if 0
-#include<stdio.h>
-#include<stdlib.h>
-
-SqStack InitStack(SqStack S)
-{
-	S=(SqStack)malloc(sizeof(struct Stack));
-	S->base =(struct BiTNode **)malloc(STACK_INIT_SIZE*sizeof(struct BiTNode**));
-	if(!S->base) exit(1);
-	S->top=S->base;
-	S->stacksize =STACK_INIT_SIZE;
-	return S;
-}
-
-BiTree GetTop(SqStack S)
-{
-	BiTree e;
-	BiTree *p;
-	p=S->top;
-	if(S->top == S->base) return 0 ;
-	p=p-1;
-	e=*p;
-	return e;
-
-}
-
-SqStack Push(SqStack S,BiTree e)
-{
-	if((S->top)-(S->base)>=(S->stacksize)){
-		S->base =(BiTree*)realloc(S->base,(S->stacksize + STACKINCREMENT)*sizeof(struct BiTNode**));
-
-		S->top=S->base+S->stacksize;
-		S->stacksize+=STACKINCREMENT;
-	}
-	*(S->top)=e;
-	S->top++;
-	return S;
-}
-
-
-BiTree Pop(SqStack S)
-{
-	BiTree e;
-	if(S->top ==S->base) return NULL;
-	S->top=S->top-1;
-	e=*S->top;
-	return e;
-}
-int StackEmpty(SqStack S)
-{
-	if(S==NULL||(S->base == S->top))
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-
-
-Status CreateBiTree(BiTree *T)
-{
-	char ch;
-	ch=getchar();
-
-	if(ch=='#') (*T)=NULL;
-	else
-	{
-		if(!((*T)=(BiTree)malloc(sizeof(struct BiTNode))))   exit(FALUSE);
-		(*T)->data=ch;
-		(*T)->lflag = 0;
-		(*T)->rflag = 0;
-		CreateBiTree(&(*T)->lchild);
-		CreateBiTree(&(*T)->rchild);
-
-	}
-	return OK;
-}
-
-void PreOrderTraverse(BiTree T)
-{
-	SqStack S=NULL;
-	S=InitStack(S);
-	BiTree p=NULL;
-	p=T;
-	while(p||!StackEmpty(S))
-	{
-		if(p)
-		{
-			printf("%4c",p->data);
-			S=Push(S,p);
-			p=p->lchild;
-		}
-		else
-		{
-			p=Pop(S);
-			p=p->rchild;
-		}
-	}
-}
-void InOrderTraveerse(BiTree T)
-{
-		SqStack S=NULL;
-		S=InitStack(S);
-		BiTree p=NULL;
-		p=T;
-		while(p||!StackEmpty(S))
-		{
-			if(p){S=Push(S,p); p=p->lchild;}
-			else
-			{
-				p=Pop(S);
-				//printf("self: %p, data:%4c, parent:%p, lchild: %p, rchild: %p, High:%d\n", p, p->data, p->parent, p->lchild, p->rchild, p->High);
-				printf("%c:%d  ", p->data, p->High);
-				
-				p=p->rchild;
-			}
-		}
-}
-//
-void PostOrderTravaerse(BiTree T)
-{
-	SqStack S=NULL;
-	S=InitStack(S);
-	BiTree p=NULL;
-	BiTree tmp = NULL;
-	p = T;
-  Push(S, p);
-	while(!StackEmpty(S))
-	{
-
-		while(p){
-			if(p->lflag != 1 )
-			{
-				if(GetTop(S) != p) {
-					Push(S, p);	
-				}
-				p->lflag = 1;
-				if(p->lchild){
-                    Push(S, p->lchild);
-                    p = p->lchild;
-				}
-			}else if(p->rflag != 1 )
-			{
-				if(GetTop(S) != p) {
-					Push(S, p);	
-				}
-				p->rflag = 1;
-                if(p->rchild){
-                    Push(S, p->rchild);
-                    p = p->rchild;
-                }
-
-			}
-			if(p->lflag == 1 && p->rflag == 1){
-                break;
-			}
-		}
-		p = Pop(S);
-		//printf("self: %p, data:%4c, parent:%p, lchild: %p, rchild: %p, High:%d\n", p, p->data, p->parent, p->lchild, p->rchild, p->High);
-		printf("%c:%d  ", p->data, p->High);
-		if(StackEmpty(S)) {
-			return;
-		}
-		tmp = GetTop(S);
-		if(tmp->lflag == 1 && tmp->rflag == 1) {
-			p = tmp;
-		}else if(tmp->lflag != 1){
-			tmp->lflag = 1;
-			p = tmp->lchild;
-		}else if(tmp->rflag != 1){
-			tmp->rflag = 1;
-			p = tmp->rchild;
-		}
-	}
-}
-
-#endif
-
+/*
+红黑树的性质
+1.节点非黑即红
+2.节点是红，其左右子节点为黑
+3.空节点(NULL)是黑色的
+4.根节点是黑色的
+5.对每个结点，从该结点到其子孙结点的所有路径上包含相同数目的黑结点
+*/
 static rb_node_t *rb_new_node(key_t key, data_t data)
 {
 	rb_node_t *node = (rb_node_t *)malloc(sizeof(struct rb_node_t));
@@ -375,14 +202,18 @@ static rb_node_t *rb_insert_rebalance(rb_node_t *node, rb_node_t *root)
 	root->color = BLACK;//根节点，不论怎样，都得置为黑色
 	return root; //返回根节点
 }
-
+/*
+如果需要删除的节点有两个儿子，那么问题可以被转化成删除另一个只有一个儿子的节点的问题（为了表述方便，这里所指的儿子，为非叶子节点的儿子）。对于二叉查找树，在删除带有两个非叶子儿子的节点的时候，我们找到要么在它的左子树中的最大元素、要么在它的右子树中的最小元素，并把它的值转移到要删除的节点中(如在这里所展示的那样)。我们接着删除我们从中复制出值的那个节点，它必定有少于两个非叶子的儿子。因为只是复制了一个值而不违反任何属性，这就把问题简化为如何删除最多有一个儿子的节点的问题。它不关心这个节点是最初要删除的节点还是我们从中复制出值的那个节点。
+在本文余下的部分中，我们只需要讨论删除只有一个儿子的节点(如果它两个儿子都为空，即均为叶子，我们任意将其中一个看作它的儿子)。如果我们删除一个红色节点（此时该节点的儿子将都为叶子节点），它的父亲和儿子一定是黑色的。所以我们可以简单的用它的黑色儿子替换它，并不会破坏属性3和4。通过被删除节点的所有路径只是少了一个红色节点，这样可以继续保证属性5。另一种简单情况是在被删除节点是黑色而它的儿子是红色的时候。如果只是去除这个黑色节点，用它的红色儿子顶替上来的话，会破坏属性5，但是如果我们重绘它的儿子为黑色，则曾经通过它的所有路径将通过它的黑色儿子，这样可以继续保持属性5。
+需要进一步讨论的是在要删除的节点和它的儿子二者都是黑色的时候，这是一种复杂的情况。我们首先把要删除的节点替换为它的儿子。出于方便，称呼这个儿子为N(在新的位置上)，称呼它的兄弟(它父亲的另一个儿子)为S
+*/
 rb_node_t *rb_erase(key_t key, rb_node_t *root)
 {
 	rb_node_t *child;	
 	rb_node_t *parent;
-	rb_node_t *old;
+	rb_node_t *old; //要删除的节点的copy
 	rb_node_t *left;
-	rb_node_t *node;
+	rb_node_t *node;//要删除的节点
 
 	color_t color;
 
@@ -391,17 +222,17 @@ rb_node_t *rb_erase(key_t key, rb_node_t *root)
 		return root;
 	}		
 
-	old = node;
+	old = node; 
 	
-	if (node->left && node->right) {
-		node = node->right;
+	if (node->left && node->right) { //当要删除的节点的左右子节点都不为NULL时
+		node = node->right;//本规则是取药删除节点的右子树中最小的节点
 		while ((left = node->left) != NULL) {
 			node = left;
 		}
-
+//找到右子树中的最小节点，并取其右孩子赋值给child
 		child = node->right;
-		parent = node->parent;
-		color = node->color;
+		parent = node->parent;//获取最小节点的父节点
+		color = node->color; //获取最小节点的color
 
 		if (child) {
 			child->parent = parent;
@@ -465,6 +296,7 @@ rb_node_t *rb_erase(key_t key, rb_node_t *root)
 			root = child;
 		}
 	}
+	free(old);
 	
 	if (color == BLACK) {
 		root = rb_erase_rebalance(child, parent, root);
@@ -517,7 +349,7 @@ static rb_node_t *rb_erase_rebalance(rb_node_t *node, rb_node_t *parent, rb_node
 			}
 		}else {
 			other = parent->left;
-			if (other->color = RED) {
+			if (other->color == RED) {
 				other->color = BLACK;
 				parent->color = RED;
 				root = rb_rotate_right(parent, root);
