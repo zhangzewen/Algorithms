@@ -10,6 +10,8 @@
  *现在的任务是将这个新数据插入到这个有序数据中
  *类似于直接插入排序中将一个数据并入到有序的区间去
  */
+
+//新加入i节点，其父节点为(i - 1) / 2
 void MinHeapFixup(int *a, int i)
 {
 	int j;
@@ -17,14 +19,14 @@ void MinHeapFixup(int *a, int i)
 	
 	temp = a[i];
 	
-	j = (i - 1) / 2;
+	j = (i - 1) / 2; //父节点
 	
 	while (j >= 0 && i != 0) {
 		if (a[j] <= temp) {
 			break;
 		}
 	
-		a[i] = a[j];
+		a[i] = a[j]; //把较大的子节点往下移动，替换它的子节点
 		
 		i = j;
 		
