@@ -26,6 +26,29 @@ struct Max_heap* creat_heap(int max)
 	
 }
 
+int InsertFixup()
+{
+
+}
+
+int find(struct Max_heap *heap, void *data)
+{
+	struct node *head = heap->node;
+	int i = 0;
+
+	while (1) {
+		ret = heap->compare(head[i]->data, data);
+		if (ret > 0) {
+			
+		} else if (ret < 0) {
+			
+		} else {
+		
+		}
+	}
+}
+
+
 int Insert(struct Max_heap *heap, void *data)
 {
 
@@ -39,13 +62,13 @@ int Insert(struct Max_heap *heap, void *data)
 	}
 
 	if (current >= max) {
-		head = (struct node *)relloc(head, (256 + max) *sizeof(struct node));
+		head = (struct node *)relloc(head, (HEAPINCREASE + heap->max) *sizeof(struct node));
 
 		if (NULL == head) {
 			return -1;
 		}
-
-	
+		
+		heap->max += 256;
 	}
 
 	while(i < max) {
@@ -56,9 +79,9 @@ int Insert(struct Max_heap *heap, void *data)
 		}	else if (ret < 0) {
 			i = i*2 + 2;
 		} else {
-			return -1;
+			return 1;
 		}
-	
+
 		if (head[i]->data == NULL &&  ret > 0) {
 			head[i]->data = data;
 			return 0;
@@ -79,33 +102,81 @@ int pop(struct Max_heap *heap, void *data)
 {
 
 }
-
 #endif
 
-
-int MaxHeapInsert(int *a, int length, int num)
+struct heap* create()
 {
-	int i = 0;	
+	struct heap *heap = NULL;
+	heap = calloc(1, sizeof(struct heap));
 
-	while (i < length) {
-		if (a[i] > num) {
-			i = 2 * i + 1;
-		}	else if (a[i] < num) {
-			i = 2 * i + 2;
-		} else  {
-			return 0;
-		}
-
-		if (a[i] == 0) {
-			a[i] = num;
-			break;
-		}
+	if (NULL == heap) {
+		fprintf(stderr, "[%s:%s:%d] calloc heap error!\n", __FILE__, __func__, __LINE__);
+		return NULL;
 	}
+
+	heap->data = calloc(HEAPMAX, sizeof(int));
+	
+	if (NULL == heap->data) {
+		fprintf(stderr, "[%s:%s:%d] calloc data error!\n", __FILE__, __func__, __LINE__);
+		free(heap);
+		return NULL;
+	}
+
+	heap->max = HEAPMAX;
+	heap->current = 0;
+
+	return heap;
 }
 
-
-
-int MaxHeapDelete(int *a, int num)
+int MaxHeapInsert(struct heap *heap, int num)
 {
+	if (heap->current == heap->max) {
+		fprintf(stderr, "[%s:%s:%d] heap is full!", __FILE__, __func__, __LINE__);
+		return -1;
+	}		
+
+	int i = heap->current;
+
+	while(i != 0 && num > heap->data[(i -1) / 2]) {
+		heap->data[i] = heap->data[(i - 1) / 2];
+		i = (i - 1) / 2;
+	}
+
+	heap->data[i] = num;
+	heap->current++;
+	return 0;
+}
+
+int pop(struct heap *heap)
+{
+	if (heap->current == 0) {
+		return 0;
+	}	
+
+	int maxvalue = heap->data[0];
+
+	int lastvalue = heap->data[heap->current - 1];
+
+	int child = 1;//堆最大节点的左子节点
+	int i = 0; //堆的最大节点
+
+	heap->current--;
+	while (child <= heap->current) {
+		if (child < heap->current &&
+			heap->data[child] < heap->data[child + 1]) {
+			child++;
+		}
+
+		if (lastvalue >= heap->data[child]) break;
+
+		heap->data[i] = heap->data[child];
 	
+		i = child;
+		
+		child  = child * 2 + 1;
+	}
+
+	heap->data[i] = lastvalue;
+
+	return 0;
 }

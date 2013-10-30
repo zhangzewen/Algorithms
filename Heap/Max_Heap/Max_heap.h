@@ -1,6 +1,8 @@
 #ifndef _ALGORITHMS_HEAP_MAXHEAP_H_INCLUDED_
 #define _ALGORITHMS_HEAP_MAXHEAP_H_INCLUDED_
 
+#define HEAPINCREASE 256
+#define HEAPMAX 1024
 #if 0
 struct node{
 	void *data;
@@ -16,7 +18,17 @@ struct Max_heap{
 };
 #endif
 
+struct heap{
+	int max;
+	int current;
+	int *data;
+};
 
-int MaxHeapInsert(int *a, int num);
-int MaxHeapDelete(int *a, int num);
+
+struct heap* create();
+int MaxHeapInsert(struct heap *heap, int num);
+int pop(struct heap *heap);
+
+
+
 #endif
