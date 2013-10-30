@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Min_heap.h"
+#include "Min_Heap.h"
 #if 0
 /*
  *一般都用数组来表示堆，i节点的父节点下标就为(i - 1) / 2，它的左右子节点的下标
@@ -118,3 +118,86 @@ void MinheapsortTodescendarry(int *a, int n)
 	}
 }
 #endif
+
+
+
+
+
+struct heap* create()
+{
+	struct heap* heap;
+	
+	heap = calloc(1, sizeof(struct heap));
+	
+	if (NULL == heap) {
+		fprintf(stderr, "[%s:%s:%d] calloc heap error!\n", __FILE__, __func__, __LINE__);
+		return NULL;
+	}
+
+	heap->current = 0;
+	heap->max = HEAPMAX;
+
+	heap->data = calloc(HEAPMAX, sizeof(int));
+
+	if (NULL == heap->data) {
+		fprintf(stderr, "[%s:%s:%d] calloc data error!\n", __FILE__, __func__, __LINE__);
+		free(heap);
+		return NULL;
+	}
+	return heap;	
+}
+
+
+int MinHeapInsert(struct heap* heap, int num)
+{
+	if (heap->current == heap->max) {
+		fprintf(stderr, "[%s:%s:%d] heap is full!\n", __FILE__, __func__, __LINE__);
+		return -1;
+	}	
+
+	int i = heap->current;
+
+	while(i !=0 && num < heap->data[(i - 1)/2]) {
+		heap->data[i] = heap->data[(i - 1) / 2];
+		i = (i - 1) / 2;
+	}
+
+	heap->data[i] = num;
+	heap->current++;
+	return 0;
+}
+
+int pop(struct heap *heap)
+{
+	if (heap->current == 0) {
+		return 0;
+	}
+
+	int minvalue = heap->data[0];
+
+	int lastvalue = heap->data[heap->current - 1];
+
+	int child = 1;
+	int i = 0;
+	
+	heap->current--;
+	
+	while (child <= heap->current) {
+		if (child < heap->current &&
+			heap->data[child] > heap->data[child + 1]) {
+			child ++;
+		}
+
+		if (lastvalue < heap->data[child]) break;
+	
+		heap->data[i] = heap->data[child];
+
+		i = child;
+		
+		child = child * 2 + 1;
+	}
+
+	heap->data[i] = lastvalue;
+
+	return 0;
+}
