@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Min_heap.h"
-
+#if 0
 /*
  *一般都用数组来表示堆，i节点的父节点下标就为(i - 1) / 2，它的左右子节点的下标
  *分别是 2 * i + 1 和 2 * i + 2
@@ -117,3 +117,4 @@ void MinheapsortTodescendarry(int *a, int n)
 		MinHeapFixdown(a, 0, 1);
 	}
 }
+#endif
