@@ -147,7 +147,7 @@ static rb_node_t *rb_insert_rebalance(rb_node_t *node, rb_node_t *root)
 	rb_node_t *tmp;//临时节点
 	
 	while ((parent = node->parent) && parent->color == RED) {
-		//parent 为node的父节点，且当父节点颜色为红 ?不该判断父节点是否为空（根节点）
+		//parent 为node的父节点，1.判断父节点时候为空 2.若父节点不为空，判断父节点是否是红色
 		gparent = parent->parent;
 		
 		if (parent == gparent->left) { //当祖父的左孩子即为父母时
