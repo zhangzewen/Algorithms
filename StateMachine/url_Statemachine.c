@@ -43,6 +43,7 @@ int parse_http_request_line(http_parse_t *r, char *buff)
     char  ch;
     char  *p;
 		char  *tmp;
+		int count = 0;
     enum {
         sw_start = 0,
         sw_method,
@@ -113,6 +114,11 @@ int parse_http_request_line(http_parse_t *r, char *buff)
 							r->path_end = p;
 							do_path(r->path_start, r->path_end);
 						} 
+						if (count > 1024) {
+							printf("url to large!\n");
+							return -1;
+						}
+						count++;
 
 						break;
 				case sw_spaces_before_version:
