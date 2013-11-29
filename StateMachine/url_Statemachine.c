@@ -134,6 +134,8 @@ int parse_http_request_header(http_parse_t *r, char *buff)
 					state = sw_start;
 					p--;
 					break;
+				} else {
+					return 0;
 				}
 				break;
 		}	
