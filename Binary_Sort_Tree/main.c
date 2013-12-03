@@ -46,4 +46,5 @@ int main()
 	InOrderTraveerse(T);
 	printf("\n");
   PostOrderTravaerse(T);
+	printf("\n");
 }
