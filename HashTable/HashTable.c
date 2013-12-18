@@ -68,7 +68,6 @@ void hash_table_free(struct HashTable *hash_table)
 
 void node_free(struct Node *node)
 {
-	struct Node *ptr;
 	if(!list_empty(&node->child)) {
 		struct Node *tmp, *ptr;
 		list_for_each_entry_safe(ptr, tmp, &node->child, child){
@@ -259,6 +258,8 @@ int add_record_to_hash_table(struct HashTable *table_head, void *data)
 		return 0;
 
 	}
+	
+	return -1;
 }
 
 

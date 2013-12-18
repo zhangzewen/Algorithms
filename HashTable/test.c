@@ -24,7 +24,6 @@ void *first_hash(void *data)
 	}
 	
 	int i = 0;
-	int sum = 0;
 	for(i = 0; i < strlen(person->name); i++){
 		*key += person->name[i] * 1;	
 	}
@@ -90,7 +89,6 @@ int main(int argc, char *argv[])
 	struct data child_5;
 	struct data child_6;
 	struct data child_7;
-	void *token;
 /***********child*****************/
 	strcpy(child.name, "zhangjie");
 	child.age = 10;

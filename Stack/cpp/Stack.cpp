@@ -14,10 +14,6 @@ int Stack::GetTop()const
 }
 
 
-
-
-
-
 Stack& Stack::Push(int val)
 {
 	int *tmp = NULL;
