@@ -218,7 +218,7 @@ rb_node_t *rb_erase(key_t key, rb_node_t *root)
 	color_t color;
 
 	if (!(node = rb_search_auxiliary(key, root, NULL))) {
-		printf("key %d is not exist !/n");
+		printf("key is not exist !/n");
 		return root;
 	}		
 

@@ -4,13 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-	
-	int count = 100;
-	
-	key_t key;
-	
 	rb_node_t *root = NULL;
-	rb_node_t *node = NULL;
 	
 	root = rb_insert(12, 1 ,root);
 	root = rb_insert(1, 2,root);
