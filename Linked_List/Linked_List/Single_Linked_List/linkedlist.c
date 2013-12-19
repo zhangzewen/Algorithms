@@ -55,7 +55,7 @@ void Print(LinkList L)
     if(p!=NULL)
     {
       while(p!=NULL){
-            printf ("%o   %d    %o\n", p, p->num, p->next);
+            printf ("%p   %d    %p\n", p, p->num, p->next);
             p=p->next;
         };
     }
@@ -190,7 +190,7 @@ struct Linear_List *Add_Node_List(LinkList L,struct Linear_List *Node)
      }
      else
      {
-         printf("\n %d can not insert into the Linear_List!\n");
+         printf("\nCan not insert into the Linear_List!\n");
      }
    return L;
 }

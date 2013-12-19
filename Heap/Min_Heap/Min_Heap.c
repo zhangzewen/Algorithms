@@ -173,7 +173,7 @@ int pop(struct heap *heap)
 		return 0;
 	}
 
-	int minvalue = heap->data[0];
+	//int minvalue = heap->data[0];
 
 	int lastvalue = heap->data[heap->current - 1];
 

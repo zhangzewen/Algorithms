@@ -153,7 +153,7 @@ int pop(struct heap *heap)
 		return 0;
 	}	
 
-	int maxvalue = heap->data[0];
+//	int maxvalue = heap->data[0];
 
 	int lastvalue = heap->data[heap->current - 1];
 

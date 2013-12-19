@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "linkedlist.h"
-void main()
+int main()
 {
 	LinkList head;
 	int length=0;
@@ -13,5 +13,5 @@ void main()
 	printf("\n Now let's have this linkedlist sorted!:\n ");
 	head=SortingList(head,length);
 	Print(head);
-	return NULL;
+	return 0;
 }

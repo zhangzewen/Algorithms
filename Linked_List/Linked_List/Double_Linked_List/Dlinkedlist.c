@@ -59,11 +59,11 @@ void Print(DLinkList L)
 		//}while(p->next!=L);
 		while(p)
 		{
-			printf("%o		%o		%d		%o\n",p->before,p,p->num,p->next);
+			printf("%p		%p		%d		%p\n",p->before,p,p->num,p->next);
 			p=p->next;
 			if(p->next==L)
 			{
-			 printf("%o		%o		%d		%o\n",p->before,p,p->num,p->next);
+			 printf("%p		%p		%d		%p\n",p->before,p,p->num,p->next);
 			 break;
 		 	}
 		}

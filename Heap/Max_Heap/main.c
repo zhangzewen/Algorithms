@@ -20,4 +20,5 @@ int main(int argc, char *argv[])
 
 	pop(heap);
 	pop(heap);
+	return 0;
 }
