@@ -169,4 +169,5 @@ int main(int argc, char *argv[])
 	PostOrderTravaerse(T);
 	printf("\n----------------------------------------------------------------------\n");
 #endif
+	return 0;
 }
