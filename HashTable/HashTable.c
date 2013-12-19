@@ -267,7 +267,7 @@ int add_record_to_hash_table(struct HashTable *table_head, void *data)
  *int del_record_to_hash_table(struct HashTable *table, void *data)
  *@table, the Hash Table
  *@data, a record that will del from Hash Table
- *return, -1: del error1, 0:del ok!
+ *return, -1: del error; 0:del ok!
  */
 
 
