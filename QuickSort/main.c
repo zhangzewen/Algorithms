@@ -18,4 +18,5 @@ int main()
 		printf("%d ",a[j]);
 	}
 	printf("\nDone\n");
+	return 0;
 }
