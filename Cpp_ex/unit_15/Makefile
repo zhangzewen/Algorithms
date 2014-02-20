@@ -1,0 +1,2 @@
+CC=g++
+CFLAGS+=-g
