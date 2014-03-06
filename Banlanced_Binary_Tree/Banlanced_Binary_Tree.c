@@ -689,6 +689,12 @@ void Balanced_node(BiTree *p, int op)
 }
 
 
+int Banlanced_Binary_Tree_delete(BiTree *T, char element)
+{
+	return 0;
+}
+
+
 /*
 
 =================================================================
