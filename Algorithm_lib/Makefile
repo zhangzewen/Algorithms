@@ -5,12 +5,12 @@ SRC_DIR=$(DIR)/src
 INCLUDE_DIR=$(DIR)/include
 OBJ_DIR=$(DIR)/obj
 DEPS_DIR=$(DIR)/deps
-LIBNAME=ccache
+LIBNAME=Algorithm
 LIB_NAME=lib$(LIBNAME).a
 LIB=$(LIB_DIR)/lib$(LIBNAME).a
 TEST_DIR=$(DIR)/test
 INSTALL_DIR=/usr/lib
-INSTALL_INCLUDE_DIR=/usr/include/ccache
+INSTALL_INCLUDE_DIR=/usr/include/Algorithm
 
 EXTENSION=c
 OBJS=$(patsubst $(SRC_DIR)/%.$(EXTENSION), $(OBJ_DIR)/%.o,$(wildcard $(SRC_DIR)/*.$(EXTENSION)))
