@@ -1,5 +1,5 @@
-#ifndef QUEUE_H__
-#define QUEUE_H__
+#ifndef _ALGORITHMS_QUEUE_H_INCLUDED__
+#define _ALGORITHMS_QUEUE_H_INCLUDED__
 
 typedef struct node{
 	struct node * next;
