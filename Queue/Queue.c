@@ -1,6 +1,3 @@
-#ifndef _ALGORITHMS_QUEUE_H_INCLUDED__
-#define _ALGORITHMS_QUEUE_H_INCLUDED__
-
 // for more ,see linux kernal list.h
 
 #include "Queue.h"
@@ -20,7 +17,7 @@ void queue_insert_head(queue *head, queue *new)
 {
 	new->next = head->next;
 	new->next->prev = new;
-	x->prev = head;
+	new->prev = head;
 	head->next = new;
 }
 
@@ -59,7 +56,3 @@ void queue_add(queue *head, queue *new)
 	head->prev->next = head;
 }
 
-#define container_of(head, type, member) 			\
-		(type*)((u_char *)head - offsetof(type, member))
-
-#endif
