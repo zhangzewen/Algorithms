@@ -5,8 +5,9 @@
 
 int compare(void *v1, void *v2)
 {
-	int va_1 = *((int *)v1);
-	int va_2 = *((int *)v2);
+	
+	int va_1 = (v1 == NULL) ? 0 : *((int *)v1);
+	int va_2 = (v2 == NULL) ? 0 :*((int *)v2);
 
 	return (va_1 - va_2);
 	
@@ -16,19 +17,16 @@ int compare(void *v1, void *v2)
 int main(int argc, char **argv)
 {
 	vector *c = NULL;
-	int v1 = 1;
-	int v2 = 2;
+	int v1 = 4;
+	int v2 = 1;
 	int v3 = 3;
-	int v4 = 4;
-	int v5 = 5;
-	int v6 = 6;
-	int v7 = 7;
-	int v8 = 8;
-	int v9 = 9;
-	int v10 = 10;
-	int v11 = 11;
-	int v12 = 12;
-	int v13 = 56;
+	int v4 = 2;
+	int v5 = 16;
+	int v6 = 9;
+	int v7 = 10;
+	int v8 = 14;
+	int v9 = 8;
+	int v10 = 7;
 	c = vector_create();	
 
 	c->push(c, (void *)(&v1 ));
@@ -41,9 +39,6 @@ int main(int argc, char **argv)
 	c->push(c, (void *)(&v8 ));
 	c->push(c, (void *)(&v9 ));
 	c->push(c, (void *)(&v10));
-	c->push(c, (void *)(&v11));
-	c->push(c, (void *)(&v12));
-	c->push(c, (void *)(&v13));
 	print(c);
 	make_heap(c, compare);
 	print(c);
