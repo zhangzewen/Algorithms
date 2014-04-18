@@ -42,5 +42,8 @@ int main(int argc, char **argv)
 	print(c);
 	make_heap(c, compare);
 	print(c);
+	printf("\n===============================\n");
+	heap_sort(c, compare);
+	print(c);
 	return 0;
 }

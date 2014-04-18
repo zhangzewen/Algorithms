@@ -173,7 +173,7 @@ static void max_heapify(vector *v, int i, int heap_size, int (*compare)(void *, 
 
 int make_heap(vector *v, int (*compare)(void *, void *))
 {
-	int heap_size = v->current;	
+	int heap_size = v->current - 1;	
 	int i = 0;
 	for (i = (v->current / 2) - 1; i >= 0; i--) {
 		max_heapify(v, i, heap_size, compare);
@@ -182,6 +182,26 @@ int make_heap(vector *v, int (*compare)(void *, void *))
 	return 0;
 }
 
+
+int heap_sort(vector *v, int (*compare)(void *, void *))
+{
+	int i = 0;
+	int heap_size = v->current - 1;
+	
+	for (i = v->current - 1; i >= 1; i--) {
+		void *tmp = NULL;
+
+		tmp = v->data[0];
+		v->data[0] = v->data[i];
+		v->data[i] = tmp;
+
+		heap_size--;
+
+		max_heapify(v, 0, heap_size, compare);
+		print(v);
+	}
+	return 0;
+}
 
 
 #if 1

@@ -27,6 +27,8 @@ vector* vector_create();
  */
 int make_heap(vector *v, int (*compare)(void *, void *));
 
+int heap_sort(vector *v, int (*compare)(void *, void *));
+
 void print(vector *v);
 
 #endif
