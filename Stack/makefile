@@ -1,10 +1,11 @@
 CFLAGS = -g3 -Werror -Wall
-main: main.o Stack.o
-	gcc ${CFLAGS} -o main main.o Stack.o
-main.o: main.c Stack.h
-	gcc ${CFLAGS} -Wall -c main.c -o main.o
-Stack.o: Stack.c Stack.h
-	gcc ${CFLAGS} -Wall -c Stack.c -o Stack.o
+main: main.o stack.o
+	gcc ${CFLAGS} -o main main.o stack.o
+main.o: main.c stack.h
+	gcc ${CFLAGS} -c main.c -o main.o
+stack.o: stack.c stack.h
+	gcc ${CFLAGS} -c stack.c -o stack.o
 clean:
 	@-rm -f *.o
 	@-rm -f main
+	@-rm -fr core.*

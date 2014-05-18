@@ -2,25 +2,33 @@
 #define _HTTP_VECTOR_H_INCLUDED__
 
 
-typedef struct vector_st{
+#define VECTOR_DEFAULT_TOTAL 6
+#define VECTOR_INCREASE_SIZE 4
+
+typedef struct vector_st vector;
+
+struct vector_st{
 	unsigned int total;
 	unsigned int current;
 	void **data;
-}vector;
-
-
-#define VECTOR_DEFAULT_TOTAL 20
-#define VECTOR_INCREASE_SIZE 40
-
+	//int (*insert)(vector *,void *data, int index);
+	int (*push)(vector *, void *data);
+	void* (*pop)(vector *);
+	void* (*get)(vector *, int index);
+	int (*update)(vector *, void *data, int index);
+	int (*Isempty)(vector *);
+	void (*free)(vector *);
+};
 
 vector* vector_create();
+/*
+ *flag = 0 min_heap 
+ *flag = 1 max_heap
+ */
+int make_heap(vector *v, int (*compare)(void *, void *));
 
-void vector_free(vector *v);
+int heap_sort(vector *v, int (*compare)(void *, void *));
 
-int vector_push(vector *v, void *data);
-
-int vector_empty(vector *v);
-void *vector_get(vector *v, unsigned int index);
-
+void print(vector *v);
 
 #endif

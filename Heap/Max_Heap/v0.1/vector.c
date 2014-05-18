@@ -4,7 +4,6 @@
 #include "vector.h"
 #include <string.h>
 
-static void vector_free(vector *v);
 static int vector_push(vector *v, void *data);
 static int vector_empty(vector *v);
 static void* vector_get(vector *v, int index);
@@ -34,20 +33,10 @@ vector* vector_create()
 	new->get = vector_get;
 	new->update = vector_update;
 	new->Isempty = vector_empty;
-	new->free = vector_free;
 
 	return new;
 }
 
-static void vector_free(vector *v)
-{
-	int i = 0;
-	for (i = 0; i < v->current; i++) {
-		free(v->data[i]);
-		v->data[i] = NULL;
-	}	
-	free(v->data);
-}
 
 static int vector_push(vector *v, void *data)
 {
@@ -81,30 +70,6 @@ static void *vector_get(vector *v, int index)
 	
 	return v->data[index];
 }
-
-#if 0
-int insert(vector *v, void *data, int index)
-{
-	if (NULL == v || NULL == v->data) {
-		return -1;
-	}
-
-	if (v->current + 1 > v->total) {
-		void **tmp = NULL;
-		tmp = (void **)(v->data, VECTOR_INCREASE_SIZE + v->total);
-		if (NULL == tmp) {
-			return -1;
-		} 
-
-		v->data = tmp;
-		v->total += VECTOR_INCREASE_SIZE;
-	}
-
-	if ( index > v->current) {
-		
-	}	
-}
-#endif
 
 
 static void* vector_pop(vector *v)
@@ -177,7 +142,6 @@ int make_heap(vector *v, int (*compare)(void *, void *))
 	int i = 0;
 	for (i = (v->current / 2) - 1; i >= 0; i--) {
 		max_heapify(v, i, heap_size, compare);
-		print(v);
 	}
 	return 0;
 }
@@ -198,21 +162,33 @@ int heap_sort(vector *v, int (*compare)(void *, void *))
 		heap_size--;
 
 		max_heapify(v, 0, heap_size, compare);
-		print(v);
 	}
 	return 0;
 }
 
 
-#if 1
-void print(vector *v)
+void Print(vector *v, void (*visit)(void *))
 {
 	int i = 0;	
 
 	for(i = 0; i < v->current; i++){
-		printf("%d ",*((int *)(v->data[i])));
+		visit(v->data[i]);
 	}
 
 	printf("\n");
 }
-#endif
+
+void vector_destroy(vector **v, void (*free_func)(void *))
+{
+	int i = 0;
+	
+	if (vector_empty(*v) && (NULL != free_func)) {
+		for (i = 0; i< (*v)->current; i++) {
+			free_func((*v)->data[i]);	
+		}	
+	}
+
+	free((*v)->data);
+	free(*v);
+	*v = NULL;
+}

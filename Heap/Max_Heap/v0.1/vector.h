@@ -11,24 +11,21 @@ struct vector_st{
 	unsigned int total;
 	unsigned int current;
 	void **data;
-	//int (*insert)(vector *,void *data, int index);
 	int (*push)(vector *, void *data);
 	void* (*pop)(vector *);
 	void* (*get)(vector *, int index);
 	int (*update)(vector *, void *data, int index);
 	int (*Isempty)(vector *);
-	void (*free)(vector *);
 };
 
 vector* vector_create();
-/*
- *flag = 0 min_heap 
- *flag = 1 max_heap
- */
+
 int make_heap(vector *v, int (*compare)(void *, void *));
 
 int heap_sort(vector *v, int (*compare)(void *, void *));
 
-void print(vector *v);
+void Print(vector *v, void (*func)(void *visit));
+
+void vector_destroy(vector **v, void (*free)(void *));
 
 #endif

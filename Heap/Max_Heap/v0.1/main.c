@@ -3,6 +3,12 @@
 
 #include "vector.h"
 
+
+void visit(void *value)
+{
+	printf("%4d", *((int*)value));
+}
+
 int compare(void *v1, void *v2)
 {
 	
@@ -39,11 +45,12 @@ int main(int argc, char **argv)
 	c->push(c, (void *)(&v8 ));
 	c->push(c, (void *)(&v9 ));
 	c->push(c, (void *)(&v10));
-	print(c);
+	Print(c, visit);
 	make_heap(c, compare);
-	print(c);
+	Print(c, visit);
 	printf("\n===============================\n");
 	heap_sort(c, compare);
-	print(c);
+	Print(c, visit);
+	vector_destroy(&c, NULL);
 	return 0;
 }
