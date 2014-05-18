@@ -26,6 +26,11 @@ int main()
 	Print(S, visit);
 	e=GetTop(S);
 	printf("\nthe top num of the stack is %d\n",*(int *)e);
+	e = Pop(S);
+	printf("\nthe Pop num is %d\n", *(int *)e);
+	e=GetTop(S);
+	printf("\nthe top num of the stack is %d\n",*(int *)e);
+
 	Stack_destroy(&S, NULL);
 	return 0;
 }
