@@ -1,4 +1,5 @@
 #include "RBTree.h"
+#include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
 /*
@@ -390,3 +391,49 @@ static rb_node_t *rb_erase_rebalance(rb_node_t *node, rb_node_t *parent, rb_node
 	}
 	return root;
 }
+
+
+
+void rb_free(rb_node_t *root)
+{
+  stack S=NULL;
+  S=InitStack(S);
+  rb_node_t *p=NULL;
+  p = root;
+  Push(S, p);
+  while(!StackEmpty(S))
+  {
+
+    while(p){
+      if(p->lflag != 1 )
+      {
+        p->lflag = 1;
+        if(p->left){
+                    Push(S, p->left);
+                    p = p->left;
+        }
+      }else if(p->rflag != 1 )
+      {
+        p->rflag = 1;
+                if(p->right){
+                    Push(S, p->right);
+                    p = p->right;
+                }
+
+      }
+      if(p->lflag == 1 && p->rflag == 1){
+                break;
+      }
+    }
+    p = Pop(S);
+    free(p);
+		p = NULL;
+    if(StackEmpty(S)) {
+      break;
+    }
+    p = GetTop(S);
+  }
+
+	Stack_destroy(&S, NULL);
+}
+

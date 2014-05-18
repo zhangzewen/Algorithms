@@ -26,9 +26,11 @@ int main(int argc, char *argv[])
 	root = rb_insert(3, 18,root);
 	root = rb_insert(8, 19,root);
 	root = rb_insert(17, 20,root);
+	rb_free(root);
 //------------------------------------------
 
 
+#if 0
 	root = rb_erase(12, root);
 	root = rb_erase(1, root);
 	root = rb_erase(9, root);
@@ -49,6 +51,6 @@ int main(int argc, char *argv[])
 	root = rb_erase(3, root);
 	root = rb_erase(8, root);
 	root = rb_erase(17,root);
-	
+#endif	
 	return 0;	
 }

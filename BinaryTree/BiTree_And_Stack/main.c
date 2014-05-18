@@ -12,15 +12,22 @@ int main()
 
 	printf("PreOrderTraverse..\n");
 	PreOrderTraverse( root);
+	printf("\n");
+	PreOrderTraverse_1( root);
 	printf("\nDone!!!!\n");
 
 	printf("InOrderTraveerse..\n");
- 	InOrderTraveerse(root);
+ 	InOrderTraverse(root);
+	printf("\n");
+ 	InOrderTraverse_1(root);
 	printf("\nDone!!!!\n");
 
 	printf("PostOrderTravaerse..\n");
-	PostOrderTravaerse(root);
+	PostOrderTraverse(root);
+	printf("\n");
+	PostOrderTraverse_1(root);
 	printf("\nDone\n");
+	BiTree_free(&root);
 
 	return 0;
 }

@@ -14,11 +14,15 @@ typedef struct rb_node_t{
 	key_t key;
 	data_t data;
 	color_t color;
+	int lflag;
+	int rflag;
 }rb_node_t;
 
 rb_node_t *rb_insert(key_t key, data_t data, rb_node_t *root);
 rb_node_t *rb_search(key_t key, rb_node_t *root);
 rb_node_t *rb_erase(key_t key, rb_node_t *root);
+void rb_free(rb_node_t *root);
+
 
 
 

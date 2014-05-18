@@ -19,10 +19,14 @@ Status CreateBiTree(BiTree *T);
 //Status CreateBiTree(BiTree &T);
 
 void PreOrderTraverse(BiTree T);
+void PreOrderTraverse_1(BiTree T);
 
-void InOrderTraveerse(BiTree T);
+void InOrderTraverse(BiTree T);
+void InOrderTraverse_1(BiTree T);
 
-void PostOrderTravaerse(BiTree T);
+void PostOrderTraverse(BiTree T);
+void PostOrderTraverse_1(BiTree T);
+void BiTree_free(BiTree *T);
 //---------------------------------------------------------------
 
 #define STACK_INIT_SIZE 100

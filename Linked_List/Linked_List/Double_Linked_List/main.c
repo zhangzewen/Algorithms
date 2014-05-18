@@ -3,7 +3,7 @@
 #include "Dlinkedlist.h"
 int main()
 {
-	DLinkList head;
+	DLinkList head = NULL;;
 	int length =0;
 	head=CreateDList(head);
 	Print(head);
