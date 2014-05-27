@@ -1,20 +1,24 @@
-#ifndef __SINOGRID_BITMAP_H_INCLUDED_
-#define __SINOGRID_BITMAP_H_INCLUDED_
+#ifndef _ALGORITHMS_BITMAP_H_INCLUDED_
+#define _ALGORITHMS_BITMAP_H_INCLUDED_
 
-#define BitMapStep 4096
-typedef struct BitMap_s BitMap;
+#include <stdint.h>
 
-struct BitMap_s{
-	int *set;
-	long int size;
+typedef struct bitmap_st bitmap_t;
+struct bitmap_st {
+	uint32_t *b;
+	int n;
 };
 
-BitMap *BitMap_create(int n);
+bitmap_t *bitmap_create(int n);
 
-int BitMap_set(BitMap *map, int n, int i);
+void bitmap_free(bitmap_t *bitmap);
 
-void BitMap_get(BitMap *map, int n, int *i);
+int bitmap_set(bitmap_t *bitmap, unsigned i);
 
+int bitmap_clear(bitmap_t *bitmap, unsigned i);
 
+int bitmap_query(bitmap_t *bitmap, unsigned i);
+
+int bitmap_find(bitmap_t *bitmap, unsigned ofs);
 
 #endif

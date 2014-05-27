@@ -1,66 +1,111 @@
-#include "BitMap.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include "BitMap.h"
 
-BitMap* BitMap_create(int n)
+bitmap_t *bitmap_create(int n)
 {
-	BitMap *map = NULL;
+	bitmap_t *bitmap;
+
+	bitmap = (bitmap_t *)malloc(sizeof(struct bitmap_st));
+
+	if (NULL == bitmap) {
+		 return NULL;
+	}
 	
-	map = (BitMap *)malloc(sizeof(BitMap));
-	
-	if (NULL == map) {
+	bitmap->n = n;
+	bitmap->b = (uint32_t *)malloc(sizeof(bitmap->b[0])*(n+31)/32);
+	if (NULL == bitmap->b) {
+		free(bitmap);
 		return NULL;
 	}
 
-	map->set = calloc(n, sizeof(int)); 
+	memset(bitmap->b, 0, sizeof(bitmap->b[0])*(n+31)/32);
 
-	if (NULL == map->set) {
-		free(map);
-		return NULL;
-	}
-
-	map->size = n;
-	
-	return map;
+	return bitmap;
 }
 
-int BitMap_set(BitMap *map, int n, int i)
+
+void bitmap_free(bitmap_t *bitmap)
 {
-	int *add = NULL;
-	int pos = 0;
+	if (NULL == bitmap)
+		return;
 
-	if (NULL == map) {
-		return 1;
-	}	
-	
-	int tmp = n / (8 * sizeof(int)) + 1;
-
-	if (map->size < tmp) {
-
-		while(map->size < tmp) {
-			map->size <<= 1;
-		}
-
-		map->set = realloc(map->set, map->size * sizeof(int));
-
-		if (NULL == map->set) {
-			return 1;
-		}
-
-	}
-
-	add = map->set + (n / 32);
-	pos = n % 32;
-
-	if (i) {
-		*add |= ~(0x1 << pos);
-	}
-
-	*add *= ~(0x1 << pos);
+	free(bitmap->b);
+	free(bitmap);
 }
 
-void BitMap_get(BitMap *map, int n, int *i)
+int bitmap_set(bitmap_t *bitmap, unsigned i)
 {
+	if (i >= bitmap->n) {
+		fprintf(stderr, "Setting invalid bitmap entry %d (of %d)\n",
+		      i, bitmap->n);
+		return -1;
+	}
+	bitmap->b[i/32] |= (1<<(i%32));
+	return 0;
+}
 
+int bitmap_clear(bitmap_t *bitmap, unsigned i)
+{
+	if (i >= bitmap->n) {
+		fprintf(stderr,"clearing invalid bitmap entry %d (of %d)\n",
+		      i, bitmap->n);
+		return -1;
+	}
+	bitmap->b[i/32] &= ~(1<<(i%32));
+	return 0;
+}
+
+/****************************************************************************
+ * query a bit in a bitmap
+ * ****************************************************************************/
+int bitmap_query(bitmap_t *bitmap, unsigned i)
+{
+	if (i >= bitmap->n) return -1;
+	if (bitmap->b[i/32] & (1<<(i%32))) {
+		return 0;
+	}
+	return -1;
+}
+
+/****************************************************************************
+ * find a zero bit in a bitmap starting at the specified offset, with
+ * wraparound
+ * ****************************************************************************/
+int bitmap_find(bitmap_t *bitmap, unsigned ofs)
+{
+	int i, j;
+
+	if (ofs > bitmap->n) ofs = 0;
+
+	i = ofs;
+	while (i < bitmap->n) {
+		if (~(bitmap->b[i/32])) {
+			j = i;
+			do {
+				if (!bitmap_query(bitmap, j)) return j;
+				j++;
+			} while (j & 31 && j < bitmap->n);
+		}
+		i += 32;
+		i &= ~31;
+	}
+
+	i = 0;
+	while (i < ofs) {
+		if (~(bitmap->b[i/32])) {
+			j = i;
+			do {
+				if (!bitmap_query(bitmap, j)) return j;
+				j++;
+			} while (j & 31 && j < bitmap->n);
+		}
+		i += 32;
+		i &= ~31;
+	}
+
+	return -1;
 }
 

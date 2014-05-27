@@ -21,6 +21,8 @@ static rb_node_t *rb_new_node(key_t key, data_t data)
 	
 	node->key = key;
 	node->data = data;
+	node->right = NULL;
+	node->right = NULL;
 	return node;
 }
 
@@ -393,13 +395,27 @@ static rb_node_t *rb_erase_rebalance(rb_node_t *node, rb_node_t *parent, rb_node
 }
 
 
+void rb_node_free(rb_node_t **node)
+{
+	if ((*node)->parent != NULL) {
+		if ((*node)->parent->left == *node) {
+			(*node)->parent->left = NULL;
+		}else if ((*node)->parent->right == *node) {
+			(*node)->parent->right = NULL;
+		}
+	}
 
-void rb_free(rb_node_t *root)
+	free(*node);
+	*node = NULL;
+}
+
+
+void rb_free(rb_node_t **root)
 {
   stack S=NULL;
   S=InitStack(S);
   rb_node_t *p=NULL;
-  p = root;
+  p = *root;
   Push(S, p);
   while(!StackEmpty(S))
   {
@@ -426,14 +442,28 @@ void rb_free(rb_node_t *root)
       }
     }
     p = Pop(S);
-    free(p);
-		p = NULL;
+		rb_node_free(&p);	
     if(StackEmpty(S)) {
       break;
     }
     p = GetTop(S);
   }
 
+	*root = NULL;
+
 	Stack_destroy(&S, NULL);
+}
+
+
+void rb_dump(rb_node_t *root)
+{
+	rb_node_t *p = NULL;
+	p = root;
+	if (p != NULL) {
+		printf("%4d",p->key);
+		rb_dump(p->left);
+		rb_dump(p->right);
+	}
+
 }
 

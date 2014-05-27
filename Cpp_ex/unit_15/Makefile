@@ -1,2 +1,0 @@
-CC=g++
-CFLAGS+=-g

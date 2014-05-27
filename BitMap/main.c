@@ -4,11 +4,11 @@
 
 int main(int argc, char *argv[])
 {
-	BitMap *map = NULL;
-	
-	map = BitMap_create(4);
-
-	BitMap_set(map, 32, 1);
-
-		
+	bitmap_t *new = NULL;
+	int i = 0;
+	new = bitmap_create(10000);
+	for (i = 0; i < 1000; i++) {
+		bitmap_set(new, i);	
+	}
+	return 0;		
 }

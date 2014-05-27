@@ -26,7 +26,8 @@ int main(int argc, char *argv[])
 	root = rb_insert(3, 18,root);
 	root = rb_insert(8, 19,root);
 	root = rb_insert(17, 20,root);
-	rb_free(root);
+	rb_dump(root);
+	rb_free(&root);
 //------------------------------------------
 
 
