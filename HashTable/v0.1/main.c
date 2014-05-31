@@ -17,7 +17,7 @@ void visit(void *data)
 unsigned int hash(void *key)
 {
 
-  int i = 0;
+  size_t i = 0;
 	char *val_1 = (char *)key;
 	unsigned int hash_val = 0;
   for(i = 0; i < strlen(val_1); i++){
