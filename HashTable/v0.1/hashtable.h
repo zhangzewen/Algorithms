@@ -10,7 +10,7 @@ typedef struct HashTable_st HashTable;
 typedef struct Node_st Node;
 
 struct HashTableOpt_st{
-	unsigned int (*hash)(void *key);
+	unsigned long int (*hash)(void *key);
 	int (*key_compare)(void *dest_key, void *src_key);
 	void (*key_free)(void **key);
 	void (*value_free)(void **value);	
@@ -30,6 +30,7 @@ struct Node_st{
 	void *data;
 	void *key;
 	HashTable *hashtable;
+	unsigned long int hash_val;
 	int hits;
 };
 
