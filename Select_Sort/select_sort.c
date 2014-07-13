@@ -20,3 +20,11 @@ void select_sort(int *a, int n)
 		}
 	}
 }
+
+
+int main(int argc, char **argv)
+{
+	int a[] = {9,8,7,6,5,4,3,2,1,0};
+	select_sort(a, 10);
+	return 0;
+}

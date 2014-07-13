@@ -25,12 +25,21 @@ int main(int argc, char *argv[])
 	myStack.Push(10);
 	myStack.Push(11);
 	myStack.Print();
+	cout << "mystack.size() = " << myStack.size() << endl;
 	cout << endl <<"===============" <<endl;
-	myStack.Pop();
-	myStack.Pop();
-	myStack.Pop();
+#if 1
+	Stack myStack_2;
+	myStack_2 = myStack;
+#endif
+
+	//Stack myStack_2 = myStack;
+	cout << "mystack_2.size() = " << myStack_2.size() << endl;
+	myStack_2.Print();
 	cout << endl <<"===============" <<endl;
-	myStack.Pop();
-	myStack.Print();
+	Stack myStack_3;
+	myStack_3.copy(myStack);
+	cout << "mystack_3.size() = " << myStack_3.size() << endl;
+	myStack_3.Print();
+	
 	return 0;
 }
