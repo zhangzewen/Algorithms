@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
 	cout << "mystack.size() = " << myStack.size() << endl;
 	myStack.Print();
 	cout << endl <<"===============" <<endl;
+	cout << "index(5):" << myStack[10] << endl;
 #if 1
 	Stack<string> myStack_2;
 	myStack_2 = myStack;
