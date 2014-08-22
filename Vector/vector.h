@@ -11,7 +11,6 @@ struct vector_st{
 	unsigned int total;
 	unsigned int current;
 	void **data;
-	//int (*insert)(vector *,void *data, int index);
 	int (*push)(vector *, void *data);
 	void* (*pop)(vector *);
 	void* (*get)(vector *, int index);
@@ -25,13 +24,12 @@ struct vector_st{
 	int (*insert_range)(vector*, int index, void *start, void *end);
 	int (*pinsert_range)(vector*, void *ptr, void *start, void *end);
 	int (*sort)(vector*, int (*compare)(void *dest, void *src));
+	void (*element_free)(void *data);
+	void (*element_compare)(void* dest, void* src);
 };
 
 vector* vector_create();
+void vector_free(vector** v);
 int make_heap(vector *v, int (*compare)(void *, void *));
-
 int heap_sort(vector *v, int (*compare)(void *, void *));
-
-void print(vector *v);
-
 #endif
