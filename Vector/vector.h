@@ -18,13 +18,16 @@ struct vector_st{
 	int (*update)(vector *, void *data, int index);
 	int (*Isempty)(vector *);
 	void (*free)(vector *);
+	int (*insert)(vector*, int index, void *data);
+	int (*pinsert)(vector*, void *ptr, void *data);
+	int (*insertn)(vector*, int index, void *data, int n);
+	int (*pinsertn)(vector*, void *ptr, void *data, int n);
+	int (*insert_range)(vector*, int index, void *start, void *end);
+	int (*pinsert_range)(vector*, void *ptr, void *start, void *end);
+	int (*sort)(vector*, int (*compare)(void *dest, void *src));
 };
 
 vector* vector_create();
-/*
- *flag = 0 min_heap 
- *flag = 1 max_heap
- */
 int make_heap(vector *v, int (*compare)(void *, void *));
 
 int heap_sort(vector *v, int (*compare)(void *, void *));
