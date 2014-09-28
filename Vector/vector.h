@@ -18,6 +18,8 @@ struct vector_st{
 	int (*Isempty)(vector*);
 	void (*free)(vector*);
 	int (*size)(vector*);
+	int (*index)(vector*, void*);
+	void* (*remove)(vector*, int index);
 	int (*insert)(vector*, int index, void *data);
 	int (*pinsert)(vector*, void *ptr, void *data);
 	int (*insertn)(vector*, int index, void *data, int n);
@@ -27,6 +29,8 @@ struct vector_st{
 	int (*sort)(vector*, int (*compare)(void *dest, void *src));
 	void (*element_free)(void *data);
 	int (*element_compare)(void* dest, void* src);
+	void (*visit)(void* data);
+	void (*dump)(vector*);
 };
 
 vector* vector_create();

@@ -15,6 +15,7 @@ static int vector_update(vector* v, void* data, int index);
 static int vector_len(vector* v);
 static int vector_index(vector* v, void* data);
 static void* vector_remove(vector* v, int index);
+static void vector_dump(vector*);
 
 /**
  * create a vector 
@@ -41,9 +42,10 @@ vector* vector_create()
 	new->get = vector_get;
 	new->update = vector_update;
 	new->Isempty = vector_empty;
-	//new->remove = vector_remove;
+	new->remove = vector_remove;
 	new->size = vector_len;
-	//new->index = vector_index;
+	new->index = vector_index;
+	new->dump = vector_dump;
 #endif
 
 	return new;
@@ -61,7 +63,7 @@ static int vecter_expend(vector* v, uint32_t len)
 
 	restLen = v->total - v->current;
 	if (restLen >= len) {
-		return 1;
+		return 0;
 	}
 
 	newLen = v->total;
@@ -312,6 +314,21 @@ int heap_sort(vector* v, int (*compare)(void*, void*))
 		max_heapify(v, 0, heap_size, compare);
 	}
 	return 0;
+}
+
+static void vector_dump(vector* v)
+{
+	if (NULL == v) {
+		return;
+	}
+	int tmp = v->current;
+
+	while(tmp) {
+		if (v->visit) {
+			v->visit(v->data[tmp]);
+		}
+		tmp--;
+	}
 }
 
 
