@@ -9,3 +9,4 @@ clean:
 	@-rm -f *.o
 	@-rm -f main
 	@-rm -fr core.*
+	@-rm -fr core

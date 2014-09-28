@@ -3,17 +3,18 @@
 #include <unistd.h>
 #include "vector.h"
 #include <string.h>
+#include <stdint.h>
 
-static void vector_free(vector** v);
-static int vector_push(vector** v, void* data);
+void vector_free(vector** v);
+static int vector_push(vector* v, void* data);
 static int vector_empty(vector* v);
 static void* vector_get(vector* v, int index);
 static void* vector_pop(vector* v);
 static int vector_update(vector* v, void* data, int index);
 
 static int vector_len(vector* v);
-static int vector_index(vector* v, void* data, size_t n);
-static int vector_remove(vector* v, int index);
+static int vector_index(vector* v, void* data);
+static void* vector_remove(vector* v, int index);
 
 /**
  * create a vector 
@@ -34,15 +35,16 @@ vector* vector_create()
 		free(new);
 		return NULL;
 	}
-
+#if 1
 	new->push = vector_push;
 	new->pop = vector_pop;
 	new->get = vector_get;
 	new->update = vector_update;
 	new->Isempty = vector_empty;
-	new->remove = vector_remove;
-	new->len = vector_len;
-	new->index = vector_index;
+	//new->remove = vector_remove;
+	new->size = vector_len;
+	//new->index = vector_index;
+#endif
 
 	return new;
 }
@@ -64,7 +66,7 @@ static int vecter_expend(vector* v, uint32_t len)
 
 	newLen = v->total;
 	while (newLen < len) {
-		newLen << 1;
+		newLen <<= 1;
 	}
 
 	tmp = (void**)realloc(v->data, newLen * sizeof(void **));
@@ -83,21 +85,21 @@ static int vecter_expend(vector* v, uint32_t len)
  * @param v a pointer points to a pointer to vector
  * @return return nothing, and now vector has been released
  */
-static void vector_free(vector** v)
+void vector_free(vector** v)
 {
 	if (NULL == *v) {
 		return;
 	}
 
 	int i = 0;
-	if (*v->element_free) {
-		for (i = 0; i < *v->current; i++) {
-			*v->element_free(*v->data[i]);
-			v->data[i] = NULL;
+	if ((*v)->element_free) {
+		for (i = 0; i < (*v)->current; i++) {
+			(*v)->element_free((*v)->data[i]);
+			(*v)->data[i] = NULL;
 		}
 	}
 
-	free(*v->data);
+	free((*v)->data);
 	free(*v);
 	*v = NULL;
 	return;
@@ -157,6 +159,10 @@ static int vector_index(vector* v, void* data)
 		return -1;
 	}
 
+	if (! v->element_compare) {
+		return -1;
+	}
+
 	for (index = 0; index < v->current; index++) {
 		if (v->element_free && v->element_compare(v->data[index], data) == 0) {
 			return index;
@@ -167,14 +173,14 @@ static int vector_index(vector* v, void* data)
 
 /**
  * remove the data, which its index is index
- * vector_remove NOT REALEASE the data AUTO!
+ * vector_remove  NOT REALEASE the data AUTO!
  * you must free the data by yourself!
  *
  * @param v a pointer point to vector
  * @param index the index of the data will be removed
  * @return return the data from the index of vector, error will return NULL
  */
-void* vector_remove(vector* v, int index)
+static void* vector_remove(vector* v, int index)
 {
 	if ( NULL == v || v->current == 0 || index > v->current) {
 		return NULL;
@@ -184,7 +190,7 @@ void* vector_remove(vector* v, int index)
 	if (v->current - 1 == index) {
 		v->data[index] = NULL;
 	} else {
-		for (; index < current - 1; index++){
+		for (; index < v->current - 1; index++){
 			v->data[index] = v->data[index + 1];
 		}
 		v->data[index]= NULL;
@@ -286,7 +292,6 @@ int make_heap(vector* v, int (*compare)(void*, void*))
 	int i = 0;
 	for (i = (v->current / 2) - 1; i >= 0; i--) {
 		max_heapify(v, i, heap_size, compare);
-		print(v);
 	}
 	return 0;
 }
@@ -305,7 +310,6 @@ int heap_sort(vector* v, int (*compare)(void*, void*))
 		heap_size--;
 
 		max_heapify(v, 0, heap_size, compare);
-		print(v);
 	}
 	return 0;
 }

@@ -132,7 +132,7 @@ int skiplist_find(skiplist_t *sl, double score) {
         while(node->level[i].forward && node->level[i].forward->score < score) {
             node = node->level[i].forward;
         }
-    }   
+    }
     node = node->level[0].forward;
     if (node && score == node->score) {
         printf("Found %d\n",(int)node->score);
@@ -140,7 +140,7 @@ int skiplist_find(skiplist_t *sl, double score) {
     } else {
         printf("Not found %d\n", (int)score);
         return 0;
-    }   
+    }
 }
 
 

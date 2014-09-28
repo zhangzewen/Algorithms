@@ -11,12 +11,13 @@ struct vector_st{
 	unsigned int total;
 	unsigned int current;
 	void **data;
-	int (*push)(vector *, void *data);
-	void* (*pop)(vector *);
-	void* (*get)(vector *, int index);
-	int (*update)(vector *, void *data, int index);
-	int (*Isempty)(vector *);
-	void (*free)(vector *);
+	int (*push)(vector*, void *data);
+	void* (*pop)(vector*);
+	void* (*get)(vector*, int index);
+	int (*update)(vector*, void *data, int index);
+	int (*Isempty)(vector*);
+	void (*free)(vector*);
+	int (*size)(vector*);
 	int (*insert)(vector*, int index, void *data);
 	int (*pinsert)(vector*, void *ptr, void *data);
 	int (*insertn)(vector*, int index, void *data, int n);
@@ -25,7 +26,7 @@ struct vector_st{
 	int (*pinsert_range)(vector*, void *ptr, void *start, void *end);
 	int (*sort)(vector*, int (*compare)(void *dest, void *src));
 	void (*element_free)(void *data);
-	void (*element_compare)(void* dest, void* src);
+	int (*element_compare)(void* dest, void* src);
 };
 
 vector* vector_create();

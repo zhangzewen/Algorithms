@@ -83,7 +83,7 @@ Stack<T>& Stack<T>::Push(T const &val)
 		base = tmp;
 		top = ptr;
 	}
-		
+
 	if(top == base)	{
 		*base = val;
 		top++;
@@ -104,7 +104,7 @@ Stack<T>& Stack<T>::Pop(T &x)
 	--top;
 	x = *top;
 	current--;
-	
+
 	return *this;
 }
 
@@ -118,7 +118,7 @@ void Stack<T>::Print()const
 	while(ptr != top) {
 		cout <<" " <<*ptr << " ";
 		ptr++;
-	}	
+	}
 
 	cout << endl;
 }
@@ -146,15 +146,15 @@ Stack<T>& Stack<T>::operator= (Stack<T> const&x)
 	ptr = x.base;
 
 	while(ptr != x.top) {
-		base[current] = *ptr;	
+		base[current] = *ptr;
 		ptr++;
 		current++;
-	}	
+	}
 
 	top = base + x.current;
 	stacksize = x.stacksize;
 	step = x.step;
-	
+
 	return *this;
 }
 
@@ -181,9 +181,9 @@ Stack<T>& Stack<T>::operator()(void *begin, void *end)
 	assert(NULL != begin);
 	assert(NULL != end);
 	assert(begin >= end);
-	
+
 	if (begin == end) {
-		
+
 	}
 }
 #endif
