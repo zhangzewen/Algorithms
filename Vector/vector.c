@@ -16,6 +16,8 @@ static int vector_len(vector* v);
 static int vector_index(vector* v, void* data);
 static void* vector_remove(vector* v, int index);
 static void vector_dump(vector*);
+static int vector_insert(vector* v, int index, void* data);
+static int vector_insertn(vector*v, int index, int count, void*data);
 
 /**
  * create a vector 
@@ -46,6 +48,8 @@ vector* vector_create()
 	new->size = vector_len;
 	new->index = vector_index;
 	new->dump = vector_dump;
+	new->insert = vector_insert;
+	new->insertn = vector_insertn;
 #endif
 
 	return new;
@@ -54,21 +58,21 @@ vector* vector_create()
 
 static int vecter_expend(vector* v, uint32_t len)
 {
-	int restLen = 0;
 	int newLen = 0;
+	int NeedLen = 0;
 	void** tmp;
 	if (NULL == v) {
 		return -1;
 	}
 
-	restLen = v->total - v->current;
-	if (restLen >= len) {
+	if ((v->total - v->current) >= len) {
 		return 0;
 	}
 
 	newLen = v->total;
-	while (newLen < len) {
-		newLen <<= 1;
+	NeedLen = len + v->current;
+	while (newLen < NeedLen) {
+		newLen  = newLen << 1;
 	}
 
 	tmp = (void**)realloc(v->data, newLen * sizeof(void **));
@@ -152,7 +156,7 @@ static int vector_len(vector* v)
  * return the index of the element in vector
  * @param v a pointer points to vector
  * @param data a pointer points to the element which will be indexed
- * @param return the index of the element
+ * @param return the index of the element that first matched
  */
 static int vector_index(vector* v, void* data)
 {
@@ -166,7 +170,7 @@ static int vector_index(vector* v, void* data)
 	}
 
 	for (index = 0; index < v->current; index++) {
-		if (v->element_free && v->element_compare(v->data[index], data) == 0) {
+		if (v->element_compare && v->element_compare(v->data[index], data) == 0) {
 			return index;
 		}
 	}
@@ -259,6 +263,48 @@ static int vector_update(vector* v, void* data, int index)
 	return 0;
 }
 
+static int vector_insert(vector* v, int index, void* data)
+{
+	int n;
+	if (NULL == v) {
+		return -1;
+	}
+
+	if (vecter_expend(v, 1) != 0) {
+		return -1;
+	}
+
+	for (n = v->current - 1; n >= index; --n){
+		v->data[n + 1] = v->data[n];
+	}
+	v->data[index] = data;
+	v->current++;
+	return 0;
+}
+
+static int vector_insertn(vector*v, int index, int count, void*data)
+{
+	int n;
+	if (NULL == v) {
+		return -1;
+	}
+
+	if (vecter_expend(v, count) != 0) {
+		return -1;
+	}
+
+	for (n = v->current - 1; n >= index; --n){
+		v->data[n + count] = v->data[n];
+	}
+
+	for (n = index; n < index + count; ++n) {
+		v->data[n] = data;
+	}
+	v->current += count;
+	return 0;
+
+}
+
 
 static void max_heapify(vector *v, int i, int heap_size, int (*compare)(void *, void *))
 {
@@ -321,13 +367,13 @@ static void vector_dump(vector* v)
 	if (NULL == v) {
 		return;
 	}
-	int tmp = v->current;
+	int tmp = 0;
 
-	while(tmp) {
+	while(tmp < v->current) {
 		if (v->visit) {
 			v->visit(v->data[tmp]);
 		}
-		tmp--;
+		++tmp;
 	}
 }
 

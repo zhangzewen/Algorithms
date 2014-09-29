@@ -8,3 +8,5 @@ vector.o: vector.c vector.h
 clean: 
 	@-rm -rf *.o
 	@-rm -f main
+	@-rm -fr core.*
+	@-rm -fr core

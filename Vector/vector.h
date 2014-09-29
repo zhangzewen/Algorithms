@@ -11,22 +11,20 @@ struct vector_st{
 	unsigned int total;
 	unsigned int current;
 	void **data;
-	int (*push)(vector*, void *data);
-	void* (*pop)(vector*);
-	void* (*get)(vector*, int index);
-	int (*update)(vector*, void *data, int index);
-	int (*Isempty)(vector*);
-	void (*free)(vector*);
-	int (*size)(vector*);
-	int (*index)(vector*, void*);
+	int (*push)(vector*, void *data); //done
+	void* (*pop)(vector*);//done
+	void* (*get)(vector*, int index);//done
+	int (*update)(vector*, void *data, int index);//done
+	int (*Isempty)(vector*);//done
+	int (*size)(vector*); //done
+	int (*index)(vector*, void*);// done
 	void* (*remove)(vector*, int index);
-	int (*insert)(vector*, int index, void *data);
-	int (*pinsert)(vector*, void *ptr, void *data);
-	int (*insertn)(vector*, int index, void *data, int n);
-	int (*pinsertn)(vector*, void *ptr, void *data, int n);
-	int (*insert_range)(vector*, int index, void *start, void *end);
-	int (*pinsert_range)(vector*, void *ptr, void *start, void *end);
-	int (*sort)(vector*, int (*compare)(void *dest, void *src));
+	int (*insert)(vector*, int index, void *data); //done
+//	int (*pinsert)(vector*, void *ptr, void *data);
+	int (*insertn)(vector*, int index, int count, void *data);//done
+//	int (*pinsertn)(vector*, void *ptr, void *data, int n);
+//	int (*insert_range)(vector*, int index, void *start, void *end);
+//	int (*pinsert_range)(vector*, void *ptr, void *start, void *end);
 	void (*element_free)(void *data);
 	int (*element_compare)(void* dest, void* src);
 	void (*visit)(void* data);
