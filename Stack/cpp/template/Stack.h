@@ -36,7 +36,7 @@ public:
 	Stack<T>& copy(Stack<T> const&);
 
 	T operator[] (uint32_t) const;
-	
+
 	Stack<T>& operator()(void *begin, void *end);
 
 	~Stack<T>(){
@@ -139,8 +139,13 @@ template<class T>
 Stack<T>& Stack<T>::operator= (Stack<T> const&x)
 {
 	cout << "call this!" << endl;
+  if (NULL != base) {
+    delete [] base;
+    base = top = NULL;
+    current = 0;
+  }
 	base = new T[x.stacksize];
-	current = 0;
+	//current = 0;
 	T *ptr;
 
 	ptr = x.base;
