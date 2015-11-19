@@ -42,11 +42,12 @@ public:
 
   RBTree() : root(NULL) {
   }
-  bool add(int key, int value);
-  bool find(int key);
-  bool del(int key);
+  bool insert(int key, int value);
+  bool search(int key);
+  bool remove(int key);
   bool leftRotate(Node** root, Node* NodeShouldRotated);
   bool rightRotate(Node** root, Node* NodeShouldRotated);
+  bool insertFixup(Node** root, Node* NodeshouldFixup);
 private:
   Node* root;
 };

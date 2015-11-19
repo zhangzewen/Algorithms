@@ -476,6 +476,7 @@ bool RBTree::leftRotated(Node** root, Node* nodeShouldRotated)
   nodeShouldRotated->right = rightChild->left;  // right[x] = left[y]
   rightChild->left->parent = nodeShouldRotated;  //p[left[y]] = x
   rightChild->parent = nodeShouldRotated->parent;  // p[y] = p[x]
+
   if (nodeShouldRotated->parent == NULL) {  // if p[x] == null, that means x is the root of RBTree
     *root = rightChild;
   } else {
@@ -501,6 +502,7 @@ bool RBTree::rightRotated(Node** root, Node* nodeShouldRotated)
   nodeShouldRotated->left = leftChild->right;  // left[x] = right[y]
   leftChild->right->parent = nodeShouldRotated;  // p[right[y]] = x
   leftChild->parent = nodeShouldRotated->parent;  // p[y] = p[x]
+
   if (nodeShouldRotated->parent == NULL) {  // if p[x] == null,  that means x is the root of RBTree
     *root = leftChild;
   } else {
@@ -517,3 +519,72 @@ bool RBTree::rightRotated(Node** root, Node* nodeShouldRotated)
   return true;
 }
 
+
+bool RBTree::insert(int key, int value)
+{
+}
+
+bool RBTree::insert(Node** root, Node* nodeShouldInsert)
+{
+  Node* parent = NULL;
+  Node* current = *root;
+  while (current != NULL) {
+    parent = current;
+    if (nodeShouldInsert->key < current->key) {
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
+
+  nodeShouldInsert->parent = parent;
+  if (NULL == parent) {
+    *root = nodeShouldInsert;
+  } else if (nodeShouldInsert->key < parent->key) {
+    parent->left = nodeShouldInsert;
+  } else if (nodeShouldInsert->key > parent->key) {
+    parent->right = nodeShouldInsert;
+  }
+  return rbtreeInsertFixup(root, nodeShouldInsert);
+}
+
+bool RBTree::insertFixup(Node** root, Node* nodeShouldFixup)
+{
+  while (nodeShouldFixup->color == RED) {
+    if (nodeShouldFixup->parent == nodeShouldFixup->parent->parent->left) {
+      Node* uncle = nodeShouldFixup->parent->parent->right;
+      if (uncle->color == RED) {
+        nodeShouldFixup->parent->color = BLACK;
+        uncle->color = BLACK;
+        nodeShouldFixup->parent->parent = RED;
+        nodeShouldFixup = nodeShouldFixup->parent->parent;
+      } else {
+        if (nodeShouldFixup = nodeShouldFixup->parent->right) {
+          nodeShouldFixup = nodeShouldFixup->parent;
+          leftRotated(root, nodeShouldFixup);
+        }
+        nodeShouldFixup->parent->color = BLACK;
+        nodeShouldFixup->parent->parent->color = RED;
+        rightRotated(root, nodeShouldFixup->parent->parent);
+      }
+    }else {
+      Node* uncle = nodeShouldFixup->parent->parent->left;
+      if (uncle->color == RED) {
+        nodeShouldFixup->parent->color = BLACK;
+        uncle->color = BLACK;
+        nodeShouldFixup->parent->parent = RED;
+        nodeShouldFixup = nodeShouldFixup->parent->parent;
+      } else {
+        if (nodeShouldFixup = nodeShouldFixup->parent->left) {
+          nodeShouldFixup = nodeShouldFixup->parent;
+          rightRotated(root, nodeShouldFixup);
+        }
+        nodeShouldFixup->parent->color = BLACK;
+        nodeShouldFixup->parent->parent->color = RED;
+        leftRotated(root, nodeShouldFixup->parent->parent);
+      }
+    }
+  }
+  *root->color = BLACK;
+  return true;
+}
