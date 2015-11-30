@@ -588,3 +588,57 @@ bool RBTree::insertFixup(Node** root, Node* nodeShouldFixup)
   *root->color = BLACK;
   return true;
 }
+
+Node* RBTree::minimun(Node* node)
+{
+  if (NULL == node) {
+    return NULL;
+  }
+  while (NULL != node->left) {
+    node = node->left;
+  }
+  return node;
+}
+
+Node* RBTree::maximum(Node* node)
+{
+  if (NULL == node) {
+    return NULL;
+  }
+
+  while (NULL != node->right) {
+    node = node->right;
+  }
+  return node;
+}
+Node* RBTree::successor(Node* node)
+{
+  if (NULL == node) {
+    return NULL;
+  }
+  if (NULL != node->right) {
+    return minimum(node->right);
+  }
+
+  Node* parent = node->parent;
+  while (NULL != parent && node == parent->right) {
+    node = parent;
+    parent = parent->parent;
+  }
+  return parent;
+}
+
+Node* RBTree::perdecessor(Node* node)
+{
+  if (NULL == node) {
+    return NULL;
+  }
+
+  if (NULL != node->left) {
+    return maximum(node->left);
+  }
+  Node* parent = node->parent;
+  while(NULL != parent && node == parent
+
+}
+

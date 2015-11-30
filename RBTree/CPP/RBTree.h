@@ -48,6 +48,10 @@ public:
   bool leftRotate(Node** root, Node* NodeShouldRotated);
   bool rightRotate(Node** root, Node* NodeShouldRotated);
   bool insertFixup(Node** root, Node* NodeshouldFixup);
+  Node* minimun(Node* node);
+  Node* Maxinum(Node* node);
+  Node* successor(Node* node);
+  Node* perdecessor(Node* node);
 private:
   Node* root;
 };
