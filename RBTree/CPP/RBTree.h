@@ -14,17 +14,20 @@ public:
     int key;
     int value;
     COLOR color;
+    rbtree_node() : left(NULL), right(NULL), parent(NULL),
+      color(RED) {
+    }
   }Node;
 
   RBTree() : root(0) {
   }
-  bool insert(int key, int value);
-  bool insert(Node** root, Node* nodeShouldInsert);
-  bool search(int key);
-  bool remove(int key);
-  bool leftRotate(Node** root, Node* NodeShouldRotated);
-  bool rightRotate(Node** root, Node* NodeShouldRotated);
-  bool insertFixup(Node** root, Node* NodeshouldFixup);
+  bool Insert(int key, int value);
+  bool Search(int key);
+  bool Remove(int key);
+  bool LeftRotate(Node** root, Node* NodeShouldRotated);
+  bool RightRotate(Node** root, Node* NodeShouldRotated);
+  bool InsertFixUp(Node** root, Node* NodeshouldFixup);
+  bool DeleteFixUp(Node** root, Node* node_should_fixup);
   Node* minimum(Node* node);
   Node* maximum(Node* node);
   Node* successor(Node* node);

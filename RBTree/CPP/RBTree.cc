@@ -55,65 +55,67 @@ bool RBTree::rightRotate(RBTree::Node** root, RBTree::Node* nodeShouldRotated)
 }
 
 
-bool RBTree::insert(int key, int value)
-{
-
-}
-
-bool RBTree::insert(RBTree::Node** root, RBTree::Node* nodeShouldInsert)
+void RBTree::insert(int key, int value)
 {
   RBTree::Node* parent = NULL;
   RBTree::Node* current = *root;
   while (current != NULL) {
     parent = current;
-    if (nodeShouldInsert->key < current->key) {
+    if (key < current->key) {
       current = current->left;
-    } else {
+    } else if (key > current->key) {
       current = current->right;
+    } else {
+      return ;
     }
   }
 
-  nodeShouldInsert->parent = parent;
+  new_node = new Node();
+  new_node->key = key;
+  new_node->value = value;
+
+  new_node->parent = parent;
+
   if (NULL == parent) {
-    *root = nodeShouldInsert;
-  } else if (nodeShouldInsert->key < parent->key) {
-    parent->left = nodeShouldInsert;
-  } else if (nodeShouldInsert->key > parent->key) {
-    parent->right = nodeShouldInsert;
+    *root = new_node;
+  } else if (new_node->key < parent->key) {
+    parent->left = new_node;
+  } else if (new_node->key > parent->key) {
+    parent->right = new_node;
   }
-  return insertFixup(root, nodeShouldInsert);
+  return insertFixup(root, new_node);
 }
 
-bool RBTree::insertFixup(RBTree::Node** root, RBTree::Node* nodeShouldFixup)
+bool RBTree::insertFixup(RBTree::Node** root, RBTree::Node* node)
 {
-  while (nodeShouldFixup->color == RBTree::RED) {
-    if (nodeShouldFixup->parent == nodeShouldFixup->parent->parent->left) {
-      RBTree::Node* uncle = nodeShouldFixup->parent->parent->right;
+  while (node->parent && node->parent->color == RBTree::RED) {
+    if (node->parent == node->parent->parent->left) {
+      RBTree::Node* uncle = node->parent->parent->right;
       if (uncle->color == RBTree::RED) {
-        nodeShouldFixup->parent->color = RBTree::BLACK;
+        node->parent->color = RBTree::BLACK;
         uncle->color = RBTree::BLACK;
-        nodeShouldFixup->parent->parent->color = RBTree::RED;
-        nodeShouldFixup = nodeShouldFixup->parent->parent;
+        node->parent->parent->color = RBTree::RED;
+        node = nodeShouldFixup->parent->parent;
       } else {
-        if (nodeShouldFixup = nodeShouldFixup->parent->right) {
-          nodeShouldFixup = nodeShouldFixup->parent;
-          leftRotate(root, nodeShouldFixup);
+        if (node = node->parent->right) {
+          node = node->parent;
+          leftRotate(root, node);
         }
-        nodeShouldFixup->parent->color = RBTree::BLACK;
-        nodeShouldFixup->parent->parent->color = RBTree::RED;
-        rightRotate(root, nodeShouldFixup->parent->parent);
+        node->parent->color = RBTree::BLACK;
+        node->parent->parent->color = RBTree::RED;
+        rightRotate(root, node->parent->parent);
       }
     }else {
-      RBTree::Node* uncle = nodeShouldFixup->parent->parent->left;
+      RBTree::Node* uncle = node->parent->parent->left;
       if (uncle->color == RBTree::RED) {
-        nodeShouldFixup->parent->color = RBTree::BLACK;
+        node->parent->color = RBTree::BLACK;
         uncle->color = RBTree::BLACK;
-        nodeShouldFixup->parent->parent->color = RBTree::RED;
-        nodeShouldFixup = nodeShouldFixup->parent->parent;
+        node->parent->parent->color = RBTree::RED;
+        node = node->parent->parent;
       } else {
-        if (nodeShouldFixup = nodeShouldFixup->parent->left) {
-          nodeShouldFixup = nodeShouldFixup->parent;
-          rightRotate(root, nodeShouldFixup);
+        if (node = node->parent->left) {
+          node = node->parent;
+          rightRotate(root, node);
         }
         nodeShouldFixup->parent->color = RBTree::BLACK;
         nodeShouldFixup->parent->parent->color = RED;
@@ -125,7 +127,7 @@ bool RBTree::insertFixup(RBTree::Node** root, RBTree::Node* nodeShouldFixup)
   return true;
 }
 
-RBTree::Node* RBTree::minimum(RBTree::Node* node)
+RBTree::Node* RBTree::Minimum(RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -136,7 +138,7 @@ RBTree::Node* RBTree::minimum(RBTree::Node* node)
   return node;
 }
 
-RBTree::Node* RBTree::maximum(RBTree::Node* node)
+RBTree::Node* RBTree::Maximum(RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -147,7 +149,7 @@ RBTree::Node* RBTree::maximum(RBTree::Node* node)
   }
   return node;
 }
-RBTree::Node* RBTree::successor(RBTree::Node* node)
+RBTree::Node* RBTree::Successor(RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -164,7 +166,7 @@ RBTree::Node* RBTree::successor(RBTree::Node* node)
   return parent;
 }
 
-RBTree::Node* RBTree::perdecessor(RBTree::Node* node)
+RBTree::Node* RBTree::Perdecessor(RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -184,3 +186,50 @@ RBTree::Node* RBTree::perdecessor(RBTree::Node* node)
   return node;
 }
 
+
+bool RBTree::Node* RBTree::delete(RBTree::Node** root, RBTree::Node *nodeShouldDelete)
+{
+  Node* tmp;
+  if (nodeShouldDelete->left == NULL || nodeShouldDelete->right) {
+    tmp = nodeShouldDelete;
+  } else {
+    y = successor(nodeShouldDelete);
+  }
+
+  if tmp
+}
+
+
+RBTree::Node* RBTree::Node* RBTree::Delete(RBTree::Node** root, int key)
+{
+  Node* current = *root;
+  Node* node;
+  Node* child;
+  while (current != NULL) {
+    if (key > current->key) {
+      current = current->right;
+    } else if (key < current->key) {
+      current = current->left;
+    } else {
+      break;
+    }
+  }
+
+  if (current == *root || current == NULL) {
+    return current;
+  }
+
+  if (current->left == NULL || current->right == NULL) {
+    node = current;
+  } else {
+    node = Successor(current);
+  }
+
+  if (node->left) {
+    child = node->right;
+  } else {
+    child = node->left;
+  }
+
+
+}
