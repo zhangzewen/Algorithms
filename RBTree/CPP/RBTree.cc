@@ -28,28 +28,28 @@ bool RBTree::leftRotate(RBTree::Node** root, RBTree::Node* nodeShouldRotated)
   return true;
 }
 
-bool RBTree::rightRotate(RBTree::Node** root, RBTree::Node* nodeShouldRotated)
+bool RBTree::rightRotate(RBTree::Node** root, RBTree::Node* node)
 {
-  if (*root == NULL || nodeShouldRotated == NULL) {
+  if (*root == NULL || node == NULL) {
     return false;
   }
-  RBTree::Node* leftChild = nodeShouldRotated->left;  // y <- left[x]
-  nodeShouldRotated->left = leftChild->right;  // left[x] = right[y]
-  leftChild->right->parent = nodeShouldRotated;  // p[right[y]] = x
-  leftChild->parent = nodeShouldRotated->parent;  // p[y] = p[x]
+  RBTree::Node* left_child = node->left;  // y <- left[x]
+  node->left = left_child->right;  // left[x] = right[y]
+  left_child->right->parent = node;  // p[right[y]] = x
+  left_child->parent = node->parent;  // p[y] = p[x]
 
-  if (nodeShouldRotated->parent == NULL) {  // if p[x] == null,  that means x is the root of RBTree
-    *root = leftChild;
+  if (node->parent == NULL) {  // if p[x] == null,  that means x is the root of RBTree
+    *root = left_child;
   } else {
-    if (nodeShouldRotated->parent->right = nodeShouldRotated) {  // if x == right[p[x]]
-      nodeShouldRotated->parent->right = leftChild;  //right[p[x]] = y
+    if (node->parent->right = node) {  // if x == right[p[x]]
+      node->parent->right = left_child;  //right[p[x]] = y
     } else {
-      nodeShouldRotated->parent->right = leftChild;  //left[p[x]] = y
+      node->parent->right = left_child;  //left[p[x]] = y
     }
   }
 
-  leftChild->right = nodeShouldRotated;  // right[y] = x
-  nodeShouldRotated->parent = leftChild;  //p[x] = y
+  left_child->right = node;  // right[y] = x
+  node->parent = leftChild;  //p[x] = y
 
   return true;
 }
@@ -177,13 +177,10 @@ RBTree::Node* RBTree::Perdecessor(RBTree::Node* node)
   }
   RBTree::Node* parent  = node->parent;
   if (NULL != parent && node == parent->left) {
-    return NULL;
-  }
-  while(NULL != parent && node == parent->right) {
     node = parent;
     parent = parent->parent;
   }
-  return node;
+  return parent;
 }
 
 
@@ -200,36 +197,82 @@ bool RBTree::Node* RBTree::delete(RBTree::Node** root, RBTree::Node *nodeShouldD
 }
 
 
-RBTree::Node* RBTree::Node* RBTree::Delete(RBTree::Node** root, int key)
+RBTree::Node* RBTree::Node* search(RBTree::Node** root, int key)
 {
+  if (NULL == *root) {
+    return NULL;
+  }
+
   Node* current = *root;
-  Node* node;
-  Node* child;
-  while (current != NULL) {
-    if (key > current->key) {
-      current = current->right;
-    } else if (key < current->key) {
+  while(current) {
+    if (current->key > key) {
       current = current->left;
+    } else if (current->key < key) {
+      current = current->right;
     } else {
-      break;
+      return current;
     }
   }
+  return NULL;
+}
 
-  if (current == *root || current == NULL) {
-    return current;
+RBTree::Node* RBTree::Delete(RBTree::Node** root, int key)
+{
+  Node* node = search(root, key);
+  Node* current = NULL;
+  Node* child = NULL;
+
+  if (NULL == node) {
+    return NULL;
   }
 
-  if (current->left == NULL || current->right == NULL) {
-    node = current;
+  if (NULL == node->left || NULL == node->right) {
+    current = node;
   } else {
-    node = Successor(current);
+    current = successor(node);
   }
 
-  if (node->left) {
-    child = node->right;
+  if (NULL != current->left) {
+    child = current->left;
   } else {
-    child = node->left;
+    child = current->right;
   }
 
+  child->parent = current->parent;
 
+  if (NULL == current->parent) {
+    *root = child;
+  } else if (current == current->parent->left) {
+    current->parent->left = child;
+  } else if (current == current->parent->right) {
+    current->parent->right = child;
+  }
+
+  if (node != current) {
+    node->key = current->key;
+    node->value = current->value;
+  }
+
+  if (current->color == RBTree::BLACK) {
+    deleteFixup(root, child);
+  }
+  return current;
+}
+
+
+void RBTree::deleteFixup(RBTree::Node** root, RBTree::Node* node)
+{
+
+  while (node != *root && node->color == RBTree::BLACK) {
+    if (node == node->parent->left) {
+      brother = node->parent->right;
+      if (brother->color == RBTree::RED) {
+        node->parent->color = RBTree::RED;
+        leftRotate(root, node->parent);
+        brother = node->parent->right;
+      }
+
+    }
+  }
+  node->color = RBTree::BLACK;
 }
