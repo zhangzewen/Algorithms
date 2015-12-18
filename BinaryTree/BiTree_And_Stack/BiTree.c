@@ -171,7 +171,7 @@ void PostOrderTraverse_1(BiTree T)
 				p->lflag = 1;
 #if 0
 				if(GetTop(S) != p) {
-					Push(S, p);	
+					Push(S, p);
 				}
 #endif
 				if(p->lchild){
@@ -183,7 +183,7 @@ void PostOrderTraverse_1(BiTree T)
 				p->rflag = 1;
 #if 0
 				if(GetTop(S) != p) {
-					Push(S, p);	
+					Push(S, p);
 				}
 #endif
 				if(p->rchild){
@@ -200,11 +200,11 @@ void PostOrderTraverse_1(BiTree T)
 		p->lflag = 0;
 		p->rflag = 0;
 		if(StackEmpty(S)) {
-			break;	
+			break;
 		}
 		p = GetTop(S);
 	}
-	
+
 	free(S->base);
 	free(S);
 }
@@ -226,7 +226,7 @@ void PostOrderTraverse(BiTree T)
 
 void BiTree_free(BiTree *T)
 {
-	
+
 	SqStack S=NULL;
 	S=InitStack(S);
 	BiTree p=NULL;
@@ -260,11 +260,11 @@ void BiTree_free(BiTree *T)
 		free(p);
 		p = NULL;
 		if(StackEmpty(S)) {
-			break;	
+			break;
 		}
 		p = GetTop(S);
 	}
-	
+
 	*T = NULL;
 	free(S->base);
 	free(S);
