@@ -5,7 +5,10 @@
 #include <stdlib.h>
 #include <stack>
 #include <iostream>
-template <class KEY, class VALUE>
+
+using namespace std;
+
+template<typename KEY, typename VALUE>
 class RBTree
 {
 public:
@@ -14,20 +17,21 @@ public:
     BLACK = 1
   }COLOR;
 
-  typedef struct rbtree_node {
-    struct rbtree_node *left, *right, *parent;
+  //template<typename KEY, typename VALUE>
+  struct Node {
+    struct Node *left, *right, *parent;
     KEY key;
     VALUE value;
     COLOR color;
-    rbtree_node() : left(0), right(0), parent(0),
+    Node() : left(0), right(0), parent(0),
       color(RED) {
     }
-    ~rbtree_node() {
+    ~Node() {
       left = 0;
       right = 0;
       parent = 0;
     }
-  }Node;
+  };
 
   RBTree() : root_(0) {
   }
@@ -46,17 +50,17 @@ public:
   Node* perdecessor(Node* node);
   void Print();
 private:
-  Node<KEY, VALUE>* root_;
+  Node* root_;
 };
 
 
-template<class KEY, class VALUE>
-bool RBTree::leftRotate(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+bool RBTree<KEY, VALUE>::leftRotate(typename RBTree::Node* node)
 {
   if (root_ == NULL || node == NULL) {
     return false;
   }
-  RBTree::Node<KEY, VALUE>* right_child = node->right;  // y <- right[x]
+  typename RBTree::Node* right_child = node->right;  // y <- right[x]
   node->right = right_child->left;  // right[x] = left[y]
   if (right_child->left) {
     right_child->left->parent = node;  //p[left[y]] = x
@@ -78,13 +82,13 @@ bool RBTree::leftRotate(RBTree::Node<KEY, VALUE>* node)
   return true;
 }
 
-template<class KEY, class VALUE>
-bool RBTree::rightRotate(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+bool RBTree<KEY, VALUE>::rightRotate(typename RBTree::Node* node)
 {
   if (root_ == NULL || node == NULL) {
     return false;
   }
-  RBTree::Node<KEY, VALUE>* left_child = node->left;  // y <- left[x]
+  typename RBTree::Node* left_child = node->left;  // y <- left[x]
   node->left = left_child->right;  // left[x] = right[y]
   if (left_child->right) {
     left_child->right->parent = node;  // p[right[y]] = x
@@ -108,11 +112,11 @@ bool RBTree::rightRotate(RBTree::Node<KEY, VALUE>* node)
 }
 
 
-template<class KEY, class VALUE>
-bool RBTree::insert(int key, int value)
+template<typename KEY, typename VALUE>
+bool RBTree<KEY, VALUE>::insert(KEY key, VALUE value)
 {
-  RBTree::Node<KEY, VALUE>* parent = NULL;
-  RBTree::Node<KEY, VALUE>* current = root_;
+  typename RBTree::Node* parent = NULL;
+  typename RBTree::Node* current = root_;
   while (current != NULL) {
     parent = current;
     if (key < current->key) {
@@ -124,7 +128,7 @@ bool RBTree::insert(int key, int value)
     }
   }
 
-  Node<KEY, VALUE>* new_node = new Node();
+  Node* new_node = new Node();
   new_node->key = key;
   new_node->value = value;
 
@@ -140,12 +144,12 @@ bool RBTree::insert(int key, int value)
   return insertFixup(new_node);
 }
 
-template<class KEY, class VALUE>
-bool RBTree::insertFixup(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+bool RBTree<KEY, VALUE>::insertFixup(typename RBTree::Node* node)
 {
   while (node->parent && node->parent->color == RBTree::RED) {
     if (node->parent == node->parent->parent->left) {
-      RBTree::Node<KEY, VALUE>* uncle = node->parent->parent->right;
+      typename RBTree::Node* uncle = node->parent->parent->right;
       if (uncle && uncle->color == RBTree::RED) {
         node->parent->color = RBTree::BLACK;
         uncle->color = RBTree::BLACK;
@@ -161,7 +165,7 @@ bool RBTree::insertFixup(RBTree::Node<KEY, VALUE>* node)
         rightRotate(node->parent->parent);
       }
     }else {
-      RBTree::Node<KEY, VALUE>* uncle = node->parent->parent->left;
+      typename RBTree::Node* uncle = node->parent->parent->left;
       if (uncle && uncle->color == RBTree::RED) {
         node->parent->color = RBTree::BLACK;
         uncle->color = RBTree::BLACK;
@@ -181,8 +185,8 @@ bool RBTree::insertFixup(RBTree::Node<KEY, VALUE>* node)
   root_->color = RBTree::BLACK;
 }
 
-template<class KEY, class VALUE>
-RBTree::Node<KEY, VALUE>* RBTree::minimum(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::minimum(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -193,8 +197,8 @@ RBTree::Node<KEY, VALUE>* RBTree::minimum(RBTree::Node<KEY, VALUE>* node)
   return node;
 }
 
-template<class KEY, class VALUE>
-RBTree::Node<KEY, VALUE>* RBTree::maximum(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::maximum(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -206,8 +210,8 @@ RBTree::Node<KEY, VALUE>* RBTree::maximum(RBTree::Node<KEY, VALUE>* node)
   return node;
 }
 
-template<class KEY, class VALUE>
-RBTree::Node<KEY, VALUE>* RBTree::successor(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::successor(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -216,7 +220,7 @@ RBTree::Node<KEY, VALUE>* RBTree::successor(RBTree::Node<KEY, VALUE>* node)
     return minimum(node->right);
   }
 
-  RBTree::Node<KEY, VALUE>* parent = node->parent;
+  RBTree<KEY, VALUE>::Node* parent = node->parent;
   while (NULL != parent && node == parent->right) {
     node = parent;
     parent = parent->parent;
@@ -224,8 +228,8 @@ RBTree::Node<KEY, VALUE>* RBTree::successor(RBTree::Node<KEY, VALUE>* node)
   return parent;
 }
 
-template<class KEY, class VALUE>
-RBTree::Node<KEY, VALUE>* RBTree::perdecessor(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::perdecessor(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -234,7 +238,7 @@ RBTree::Node<KEY, VALUE>* RBTree::perdecessor(RBTree::Node<KEY, VALUE>* node)
   if (NULL != node->left) {
     return maximum(node->left);
   }
-  RBTree::Node<KEY, VALUE>* parent  = node->parent;
+  typename RBTree::Node* parent  = node->parent;
   if (NULL != parent && node == parent->left) {
     node = parent;
     parent = parent->parent;
@@ -243,14 +247,14 @@ RBTree::Node<KEY, VALUE>* RBTree::perdecessor(RBTree::Node<KEY, VALUE>* node)
 }
 
 
-template<class KEY, class VALUE>
-RBTree::Node<KEY, VALUE>* RBTree::search(int key)
+template<typename KEY, typename VALUE>
+typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::search(KEY key)
 {
   if (NULL == root_) {
     return NULL;
   }
 
-  Node<KEY, VALUE>* current = root_;
+  Node* current = root_;
   while(current) {
     if (current->key > key) {
       current = current->left;
@@ -263,12 +267,12 @@ RBTree::Node<KEY, VALUE>* RBTree::search(int key)
   return NULL;
 }
 
-template<class KEY, class VALUE>
-RBTree::Node<KEY, VALUE>* RBTree::Delete(int key)
+template<typename KEY, typename VALUE>
+typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::Delete(KEY key)
 {
-  Node<KEY, VALUE>* node = search(key);
-  Node<KEY, VALUE>* current = NULL;
-  Node<KEY, VALUE>* child = NULL;
+  Node* node = search(key);
+  Node* current = NULL;
+  Node* child = NULL;
 
   if (NULL == node) {
     return NULL;
@@ -310,10 +314,10 @@ RBTree::Node<KEY, VALUE>* RBTree::Delete(int key)
 }
 
 
-template<class KEY, class VALUE>
-void RBTree::deleteFixup(RBTree::Node<KEY, VALUE>* node)
+template<typename KEY, typename VALUE>
+void RBTree<KEY, VALUE>::deleteFixup(typename RBTree::Node* node)
 {
-  Node<KEY, VALUE>* brother = NULL;
+  Node* brother = NULL;
   while (node != root_ && node->color == RBTree::BLACK) {
     if (node == node->parent->left) {
       brother = node->parent->right;
@@ -369,17 +373,17 @@ void RBTree::deleteFixup(RBTree::Node<KEY, VALUE>* node)
 }
 
 
-template<class KEY, class VALUE>
-void RBTree::Print()
+template<typename KEY, typename VALUE>
+void RBTree<KEY, VALUE>::Print()
 {
-  std::stack<Node<KEY, VALUE>* > tree_stack;
+  std::stack<Node* > tree_stack;
   Node* current = root_;
   while(current || !tree_stack.empty()) {
     if (current) {
       tree_stack.push(current);
       current = current->left;
     } else {
-      Node<KEY, VALUE>* p = tree_stack.top();
+      Node* p = tree_stack.top();
       tree_stack.pop();
       std::cout << p->key << " ";
       current = p->right;
@@ -388,8 +392,8 @@ void RBTree::Print()
 }
 
 
-template<class KEY, class VALUE>
-RBTree::~RBTree()
+template<typename KEY, typename VALUE>
+RBTree<KEY, VALUE>::~RBTree()
 {
 }
 
