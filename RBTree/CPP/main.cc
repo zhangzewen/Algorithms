@@ -20,7 +20,9 @@ int main(int argc, char** argv)
   tree.insert(30,2);
   tree.Print();
   std::cout << std::endl;
-  tree.Delete(30);
+  RBTree::Node* tmp = tree.Delete(30);
+  delete tmp;
+
   tree.Print();
   return 0;
 }

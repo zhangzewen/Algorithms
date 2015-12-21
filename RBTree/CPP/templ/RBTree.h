@@ -17,14 +17,15 @@ public:
     BLACK = 1
   }COLOR;
 
-  //template<typename KEY, typename VALUE>
   struct Node {
     struct Node *left, *right, *parent;
     KEY key;
     VALUE value;
+    int lflag;
+    int rflag;
     COLOR color;
     Node() : left(0), right(0), parent(0),
-      color(RED) {
+      lflag(0), rflag(0), color(RED) {
     }
     ~Node() {
       left = 0;
@@ -395,6 +396,45 @@ void RBTree<KEY, VALUE>::Print()
 template<typename KEY, typename VALUE>
 RBTree<KEY, VALUE>::~RBTree()
 {
+    std::stack<Node*> tree_stack;
+    Node* current = root_;
+    tree_stack.push(current);
+
+    while(!tree_stack.empty())
+    {
+
+        while(current){
+            if(current->lflag != 1 )
+            {
+                current->lflag = 1;
+                if(current->left){
+                    tree_stack.push(current->left);
+                    current = current->left;
+                }
+            }else if(current->rflag != 1)
+            {
+                current->rflag = 1;
+                if(current->right){
+                    tree_stack.push(current->right);
+                    current = current->right;
+                }
+
+            }else if(current->lflag == 1 && current->rflag == 1){
+                break;
+            }
+        }
+        current = tree_stack.top();
+        tree_stack.pop();
+        //printf("%4c", p->data);
+        delete current;
+        current = NULL;
+        if(tree_stack.empty()) {
+            break;	
+        }
+        current = tree_stack.top();
+    }
+
+    root_ = NULL;
 }
 
 #endif
