@@ -51,6 +51,8 @@ public:
   Node* perdecessor(Node* node);
   void Print();
 private:
+  RBTree(const RBTree&);
+  RBTree& operator=(const RBTree&);
   Node* root_;
 };
 
@@ -425,11 +427,10 @@ RBTree<KEY, VALUE>::~RBTree()
         }
         current = tree_stack.top();
         tree_stack.pop();
-        //printf("%4c", p->data);
         delete current;
         current = NULL;
         if(tree_stack.empty()) {
-            break;	
+            break;
         }
         current = tree_stack.top();
     }
