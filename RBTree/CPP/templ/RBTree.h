@@ -1,8 +1,6 @@
 #ifndef _RBTREE_H_INCLUDED__
 #define _RBTREE_H_INCLUDED__
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <stack>
 #include <iostream>
 
