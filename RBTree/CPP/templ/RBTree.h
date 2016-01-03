@@ -1,12 +1,18 @@
 #ifndef _RBTREE_H_INCLUDED__
 #define _RBTREE_H_INCLUDED__
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stack>
 #include <iostream>
+#include <functional>
 
 using namespace std;
 
-template<typename KEY, typename VALUE>
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare = std::less<KEY> >
 class RBTree
 {
 public:
@@ -52,11 +58,15 @@ private:
   RBTree(const RBTree&);
   RBTree& operator=(const RBTree&);
   Node* root_;
+  Compare comp_;
 };
 
 
-template<typename KEY, typename VALUE>
-bool RBTree<KEY, VALUE>::leftRotate(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+bool RBTree<KEY, VALUE, Compare>::leftRotate(typename RBTree::Node* node)
 {
   if (root_ == NULL || node == NULL) {
     return false;
@@ -83,8 +93,11 @@ bool RBTree<KEY, VALUE>::leftRotate(typename RBTree::Node* node)
   return true;
 }
 
-template<typename KEY, typename VALUE>
-bool RBTree<KEY, VALUE>::rightRotate(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+bool RBTree<KEY, VALUE, Compare>::rightRotate(typename RBTree::Node* node)
 {
   if (root_ == NULL || node == NULL) {
     return false;
@@ -113,19 +126,22 @@ bool RBTree<KEY, VALUE>::rightRotate(typename RBTree::Node* node)
 }
 
 
-template<typename KEY, typename VALUE>
-bool RBTree<KEY, VALUE>::insert(KEY key, VALUE value)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+bool RBTree<KEY, VALUE, Compare>::insert(KEY key, VALUE value)
 {
   typename RBTree::Node* parent = NULL;
   typename RBTree::Node* current = root_;
   while (current != NULL) {
     parent = current;
-    if (key < current->key) {
+    if (comp_(key, current->key) && comp_(current->key, key)) {
+        return false;
+    } else if (comp_(key, current->key)) {
       current = current->left;
-    } else if (key > current->key) {
-      current = current->right;
     } else {
-      return false;
+      current = current->right;
     }
   }
 
@@ -137,16 +153,20 @@ bool RBTree<KEY, VALUE>::insert(KEY key, VALUE value)
 
   if (NULL == parent) {
     root_ = new_node;
-  } else if (new_node->key < parent->key) {
+  } else if (comp_(new_node->key, parent->key)) {
     parent->left = new_node;
-  } else if (new_node->key > parent->key) {
+  } else {
     parent->right = new_node;
   }
+
   return insertFixup(new_node);
 }
 
-template<typename KEY, typename VALUE>
-bool RBTree<KEY, VALUE>::insertFixup(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+bool RBTree<KEY, VALUE, Compare>::insertFixup(typename RBTree::Node* node)
 {
   while (node->parent && node->parent->color == RBTree::RED) {
     if (node->parent == node->parent->parent->left) {
@@ -186,8 +206,11 @@ bool RBTree<KEY, VALUE>::insertFixup(typename RBTree::Node* node)
   root_->color = RBTree::BLACK;
 }
 
-template<typename KEY, typename VALUE>
-typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::minimum(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::minimum(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -198,8 +221,11 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::minimum(typename RBTree::
   return node;
 }
 
-template<typename KEY, typename VALUE>
-typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::maximum(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::maximum(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -211,8 +237,11 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::maximum(typename RBTree::
   return node;
 }
 
-template<typename KEY, typename VALUE>
-typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::successor(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::successor(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -221,7 +250,7 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::successor(typename RBTree
     return minimum(node->right);
   }
 
-  RBTree<KEY, VALUE>::Node* parent = node->parent;
+  RBTree<KEY, VALUE, Compare>::Node* parent = node->parent;
   while (NULL != parent && node == parent->right) {
     node = parent;
     parent = parent->parent;
@@ -229,8 +258,11 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::successor(typename RBTree
   return parent;
 }
 
-template<typename KEY, typename VALUE>
-typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::perdecessor(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::perdecessor(typename RBTree::Node* node)
 {
   if (NULL == node) {
     return NULL;
@@ -248,8 +280,11 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::perdecessor(typename RBTr
 }
 
 
-template<typename KEY, typename VALUE>
-typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::search(KEY key)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::search(KEY key)
 {
   if (NULL == root_) {
     return NULL;
@@ -257,19 +292,22 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::search(KEY key)
 
   Node* current = root_;
   while(current) {
-    if (current->key > key) {
+    if (comp_(current->key, key) && comp_(key, current->key)) {
+        return current;
+    } else if (!comp_(current->key,  key)) {
       current = current->left;
-    } else if (current->key < key) {
-      current = current->right;
     } else {
-      return current;
+      current = current->right;
     }
   }
   return NULL;
 }
 
-template<typename KEY, typename VALUE>
-typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::Delete(KEY key)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::Delete(KEY key)
 {
   Node* node = search(key);
   Node* current = NULL;
@@ -315,8 +353,11 @@ typename RBTree<KEY, VALUE>::Node* RBTree<KEY, VALUE>::Delete(KEY key)
 }
 
 
-template<typename KEY, typename VALUE>
-void RBTree<KEY, VALUE>::deleteFixup(typename RBTree::Node* node)
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+void RBTree<KEY, VALUE, Compare>::deleteFixup(typename RBTree::Node* node)
 {
   Node* brother = NULL;
   while (node != root_ && node->color == RBTree::BLACK) {
@@ -374,8 +415,11 @@ void RBTree<KEY, VALUE>::deleteFixup(typename RBTree::Node* node)
 }
 
 
-template<typename KEY, typename VALUE>
-void RBTree<KEY, VALUE>::Print()
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+void RBTree<KEY, VALUE, Compare>::Print()
 {
   std::stack<Node* > tree_stack;
   Node* current = root_;
@@ -392,9 +436,11 @@ void RBTree<KEY, VALUE>::Print()
   }
 }
 
-
-template<typename KEY, typename VALUE>
-RBTree<KEY, VALUE>::~RBTree()
+template<
+    typename KEY,
+    typename VALUE,
+    typename Compare>
+RBTree<KEY, VALUE, Compare>::~RBTree()
 {
     std::stack<Node*> tree_stack;
     Node* current = root_;
@@ -425,10 +471,11 @@ RBTree<KEY, VALUE>::~RBTree()
         }
         current = tree_stack.top();
         tree_stack.pop();
+        //printf("%4c", p->data);
         delete current;
         current = NULL;
         if(tree_stack.empty()) {
-            break;
+            break;	
         }
         current = tree_stack.top();
     }
