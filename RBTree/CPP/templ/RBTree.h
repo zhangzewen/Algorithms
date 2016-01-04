@@ -43,7 +43,7 @@ public:
   ~RBTree();
   bool insert(KEY key, VALUE value);
   Node* search(KEY key);
-  Node* Delete(KEY key);
+  void Delete(KEY key);
   bool remove(KEY key);
   bool leftRotate(Node* node);
   bool rightRotate(Node* node);
@@ -53,7 +53,7 @@ public:
   Node* maximum(Node* node);
   Node* successor(Node* node);
   Node* perdecessor(Node* node);
-  void Print();
+  void Print(void (*visit)(KEY key, VALUE value));
 private:
   RBTree(const RBTree&);
   RBTree& operator=(const RBTree&);
@@ -136,7 +136,7 @@ bool RBTree<KEY, VALUE, Compare>::insert(KEY key, VALUE value)
   typename RBTree::Node* current = root_;
   while (current != NULL) {
     parent = current;
-    if (comp_(key, current->key) && comp_(current->key, key)) {
+    if (!comp_(key, current->key) && !comp_(current->key, key)) {
         return false;
     } else if (comp_(key, current->key)) {
       current = current->left;
@@ -292,7 +292,7 @@ typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::search(
 
   Node* current = root_;
   while(current) {
-    if (comp_(current->key, key) && comp_(key, current->key)) {
+    if (!comp_(current->key, key) && !comp_(key, current->key)) {
         return current;
     } else if (!comp_(current->key,  key)) {
       current = current->left;
@@ -307,14 +307,15 @@ template<
     typename KEY,
     typename VALUE,
     typename Compare>
-typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::Delete(KEY key)
+//typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::Delete(KEY key)
+void RBTree<KEY, VALUE, Compare>::Delete(KEY key)
 {
   Node* node = search(key);
   Node* current = NULL;
   Node* child = NULL;
 
   if (NULL == node) {
-    return NULL;
+    return ;
   }
 
   if (NULL == node->left || NULL == node->right) {
@@ -349,7 +350,7 @@ typename RBTree<KEY, VALUE, Compare>::Node* RBTree<KEY, VALUE, Compare>::Delete(
   if (current->color == RBTree::BLACK) {
     deleteFixup(child);
   }
-  return current;
+  delete current;
 }
 
 
@@ -419,7 +420,7 @@ template<
     typename KEY,
     typename VALUE,
     typename Compare>
-void RBTree<KEY, VALUE, Compare>::Print()
+void RBTree<KEY, VALUE, Compare>::Print(void (*visit)(KEY key, VALUE value))
 {
   std::stack<Node* > tree_stack;
   Node* current = root_;
@@ -430,7 +431,7 @@ void RBTree<KEY, VALUE, Compare>::Print()
     } else {
       Node* p = tree_stack.top();
       tree_stack.pop();
-      std::cout << p->key << " ";
+      visit(p->key, p->value);
       current = p->right;
     }
   }
@@ -475,7 +476,7 @@ RBTree<KEY, VALUE, Compare>::~RBTree()
         delete current;
         current = NULL;
         if(tree_stack.empty()) {
-            break;	
+            break;
         }
         current = tree_stack.top();
     }

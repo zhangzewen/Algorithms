@@ -1,9 +1,22 @@
 #include <iostream>
 #include "RBTree.h"
 
+struct comp
+{
+  bool operator()(int* a, int *b) {
+    return *a < *b ? true : false;
+  }
+};
+
+
+void visit(int* key, int value)
+{
+  std::cout << "key: " << *key << ", value: " << value << std::endl;
+}
+
 int main(int argc, char** argv)
 {
-  RBTree<int*, int> tree;
+  RBTree<int*, int, comp> tree;
   int a1 = 1;
   int a2 = 2;
   int a3 = 3;
@@ -34,12 +47,9 @@ int main(int argc, char** argv)
   tree.insert(&a13,2);
   tree.insert(&a14,2);
 
-  tree.Print();
-  //std::cout << std::endl;
-  //RBTree<int, int>::Node* tmp = tree.Delete(30);
-  //delete tmp;
-  //tree.Print();
-  //RBTree<int, int> other;
-  //other = tree;
+  tree.Print(visit);
+  std::cout << std::endl;
+  tree.Delete(&a14);
+  tree.Print(visit);
   return 0;
 }
