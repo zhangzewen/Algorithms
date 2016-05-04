@@ -9,6 +9,8 @@
 #include <iostream>
 #include "AdjList.h"
 
+static int Time = 0;
+
 struct AdjListNode* newAdjListNode(int dest)
 {
     struct AdjListNode* newNode =
@@ -170,3 +172,55 @@ void BFS(struct Graph* graph, int i)
         std::cout << point << std::endl;
     }
 }
+
+std::map<int, COLOR> colormap;
+std::map<int, int> distancemap;
+std::map<int, AdjListNode*> parentmap;
+std::map<int, int> timemap;
+
+void DFS_Visit(struct Graph* graph, int i)
+{
+    colormap[i] = GRAY;
+    Time = Time + 1;
+    distancemap[i] = Time;
+    struct AdjListNode* relateVectors = graph->array[i].head->next;
+    while(relateVectors) {
+        if (colormap[relateVectors->point] == WHITE) {
+            parentmap[relateVectors->point] = graph->array[i].head;
+            DFS_Visit(graph, relateVectors->point);
+        }
+        relateVectors = relateVectors->next;
+    }
+    colormap[i] = BLACK;
+    Time = Time + 1;
+    timemap.insert(std::make_pair(i, Time));
+}
+
+void DFS(struct Graph* graph, int i)
+{
+
+    colormap.clear();
+    distancemap.clear();
+    parentmap.clear();
+    for(int v = 0; v < graph->V; ++v) {
+        struct AdjListNode* pCrawl = graph->array[v].head->next;
+        while(pCrawl) {
+            colormap.insert(std::make_pair(pCrawl->point, WHITE));
+            parentmap.insert(std::make_pair(pCrawl->point, static_cast<AdjListNode*>(0)));
+            pCrawl = pCrawl->next;
+        }
+
+    }
+    Time = 0;
+
+    for(int v = 0; v < graph->V; ++v) {
+        struct AdjListNode* pCrawl = graph->array[v].head->next;
+        while(pCrawl) {
+            if (colormap[pCrawl->point] == WHITE) {
+                DFS_Visit(graph, pCrawl->point);
+            }
+            pCrawl = pCrawl->next;
+        }
+    }
+}
+
