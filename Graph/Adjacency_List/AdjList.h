@@ -23,6 +23,12 @@ struct Graph
     struct AdjList* array;
 };
 
+typedef enum{
+    WHITE = 0,
+    GRAY,
+    BLACK
+}COLOR;
+
 struct AdjListNode* newAdjListNode(int dest);
 struct Graph* createGraph(int V);
 void addEdge(struct Graph* graph, int src, int dest);
@@ -31,6 +37,7 @@ void delAdjListNode(struct AdjListNode* head, int dest);
 void freeAdjList(struct AdjListNode** head);
 void delEdge(struct Graph* graph, int src, int dest);
 void freeGraph(struct Graph** graph);
+void BFS(struct Graph* graph, int i);
 
 
 #endif  //  ALGORITHMS_ADJACENCY_LIST_H

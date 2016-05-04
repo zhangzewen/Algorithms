@@ -17,5 +17,7 @@ int main(int argc, char** argv)
     printf("\n=======================\n");
     delEdge(graph, 1, 4);
     printGraph(graph);
+    BFS(graph, 0);
+    freeGraph(&graph);
     return 0;
 }

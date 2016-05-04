@@ -1,10 +1,11 @@
 CFLAGS=-g3 -Wall -Werror
+CC=g++
 main: main.o AdjList.o
-	gcc ${CFLAGS} main.o AdjList.o -o main
-AdjList.o: AdjList.c AdjList.h 
-	gcc ${CFLAGS} -c AdjList.c ${CFLAGS} -o AdjList.o
+	${CC} ${CFLAGS} main.o AdjList.o -o main
+AdjList.o: AdjList.cc AdjList.h 
+	${CC} ${CFLAGS} -c AdjList.cc ${CFLAGS} -o AdjList.o
 main.o: main.c AdjList.h 
-	gcc ${CFLAGS} -c main.c ${CFLAGS} -o main.o
+	${CC} ${CFLAGS} -c main.c ${CFLAGS} -o main.o
 clean:
 	rm -fr *.o
 	rm -fr main
