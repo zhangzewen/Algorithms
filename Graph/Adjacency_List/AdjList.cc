@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <map>
 #include <queue>
+#include <stack>
 #include <iostream>
 #include "AdjList.h"
 
@@ -20,7 +21,7 @@ struct AdjListNode* newAdjListNode(int dest)
     return newNode;
 }
 
-struct Graph* createGraph(int V)
+struct Graph* createGraph(int V, bool directed, bool acyclic)
 {
     struct  Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
     graph->V = V;
@@ -31,6 +32,8 @@ struct Graph* createGraph(int V)
     for (; i < V; i++) {
         graph->array[i].head = NULL;
     }
+    graph->directed = directed;
+    graph->acyclic = acyclic;
     return graph;
 }
 
@@ -48,9 +51,11 @@ void addEdge(struct Graph* graph, int src, int dest)
     newNode->next = graph->array[src].head->next;
     graph->array[src].head->next = newNode;
 
-    newNode = newAdjListNode(src);
-    newNode->next = graph->array[dest].head->next;
-    graph->array[dest].head->next = newNode;
+    if(!graph->directed) {
+        newNode = newAdjListNode(src);
+        newNode->next = graph->array[dest].head->next;
+        graph->array[dest].head->next = newNode;
+    }
 }
 
 
@@ -181,6 +186,7 @@ std::map<int, int> timemap;
 void DFS_Visit(struct Graph* graph, int i)
 {
     colormap[i] = GRAY;
+    std::cout << i << std::endl;
     Time = Time + 1;
     distancemap[i] = Time;
     struct AdjListNode* relateVectors = graph->array[i].head->next;
@@ -196,31 +202,62 @@ void DFS_Visit(struct Graph* graph, int i)
     timemap.insert(std::make_pair(i, Time));
 }
 
-void DFS(struct Graph* graph, int i)
+void DFS(struct Graph* graph)
 {
 
     colormap.clear();
     distancemap.clear();
     parentmap.clear();
     for(int v = 0; v < graph->V; ++v) {
-        struct AdjListNode* pCrawl = graph->array[v].head->next;
-        while(pCrawl) {
-            colormap.insert(std::make_pair(pCrawl->point, WHITE));
-            parentmap.insert(std::make_pair(pCrawl->point, static_cast<AdjListNode*>(0)));
-            pCrawl = pCrawl->next;
-        }
-
+        struct AdjListNode* pCrawl = graph->array[v].head;
+        colormap.insert(std::make_pair(pCrawl->point, WHITE));
+        parentmap.insert(std::make_pair(pCrawl->point, static_cast<AdjListNode*>(0)));
     }
     Time = 0;
 
     for(int v = 0; v < graph->V; ++v) {
-        struct AdjListNode* pCrawl = graph->array[v].head->next;
-        while(pCrawl) {
-            if (colormap[pCrawl->point] == WHITE) {
-                DFS_Visit(graph, pCrawl->point);
-            }
-            pCrawl = pCrawl->next;
+        struct AdjListNode* pCrawl = graph->array[v].head;
+        if (colormap[pCrawl->point] == WHITE) {
+            DFS_Visit(graph, pCrawl->point);
         }
+    }
+}
+
+
+void topologicalSortCore(Graph* graph, int i, std::map<int, bool>& visited, std::stack<int>& Stack)
+{
+    visited[i] = true;
+    struct AdjListNode* relateVectors = graph->array[i].head->next;
+    while(relateVectors) {
+        if (!visited[relateVectors->point]) {
+            topologicalSortCore(graph, relateVectors->point, visited, Stack);
+        }
+        relateVectors = relateVectors->next;
+    }
+    Stack.push(i);
+
+}
+
+
+void topologicalSort(Graph* graph)
+{
+    std::stack<int> stack_;
+    std::map<int, bool> visited;
+    for(int v = 0; v < graph->V; ++v) {
+        struct AdjListNode* pCrawl = graph->array[v].head;
+        visited[pCrawl->point] = false;
+    }
+
+    for (int v = 0; v < graph->V; ++v) {
+        struct AdjListNode* pCrawl = graph->array[v].head;
+        if (visited[pCrawl->point] == false) {
+            topologicalSortCore(graph, pCrawl->point, visited, stack_);
+        }
+    }
+
+    while(stack_.empty() == false) {
+        std::cout << stack_.top() << " ";
+        stack_.pop();
     }
 }
 
